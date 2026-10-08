@@ -9,10 +9,11 @@ Report на сервер Fedora `172.17.43.45` и восстанавливает
 ghcr.io/mosoonk/openproject-fi-ausbildung:sha-3b87cc8
 ```
 
-Backup `openproject-backup20261006-7-39toaq.zip` содержит только
+Backup `backup_file_name.zip` содержит только
 `openproject.sql`. Вложения и другие файлы OpenProject в этом архиве
 отсутствуют и должны восстанавливаться из отдельной резервной копии.
 
+> [!WARNING]
 > В текущей конфигурации используется HTTP. Пароли, cookies, API-токены и
 > содержимое Daily Report не защищены шифрованием. Доступ необходимо ограничить
 > внутренней сетью и затем настроить TLS.
@@ -27,7 +28,7 @@ ssh ausbildung-pc@172.17.43.45 "mkdir -p ~/openproject-FI"
 scp C:\Users\maksym.shkurenko\Documents\openproject-daily-report\deploy\production\compose.yml `
     ausbildung-pc@172.17.43.45:~/openproject-FI/
 
-scp C:\Users\maksym.shkurenko\Documents\openproject-backup20261006-7-39toaq.zip `
+scp C:\path\to\backup_file_name.zip `
     ausbildung-pc@172.17.43.45:~/openproject-FI/
 ```
 
@@ -104,7 +105,7 @@ sudo install -d -m 0750 \
   /opt/openproject-FI
 
 cp ~/openproject-FI/compose.yml /opt/openproject-FI/
-cp ~/openproject-FI/openproject-backup20261006-7-39toaq.zip /opt/openproject-FI/
+cp ~/openproject-FI/backup_file_name.zip /opt/openproject-FI/
 
 cd /opt/openproject-FI
 ```
@@ -112,7 +113,7 @@ cd /opt/openproject-FI
 Проверьте backup:
 
 ```bash
-unzip -l openproject-backup20261006-7-39toaq.zip
+unzip -l backup_file_name.zip
 ```
 
 В архиве должен присутствовать `openproject.sql`.
@@ -192,7 +193,7 @@ sudo docker compose --env-file .env ps
 Восстановите SQL:
 
 ```bash
-unzip -p openproject-backup20261006-7-39toaq.zip openproject.sql |
+unzip -p backup_file_name.zip openproject.sql |
   sudo docker compose --env-file .env exec -T db \
     psql -v ON_ERROR_STOP=1 -U openproject -d openproject
 ```
@@ -301,5 +302,6 @@ sudo docker compose --env-file .env stop web worker cron
 sudo docker compose --env-file .env start web worker cron
 ```
 
-Не выполняйте `docker compose down --volumes`: эта команда удалит persistent
-volumes с базой и файлами.
+> [!DANGER]
+> Не выполняйте `docker compose down --volumes`: эта команда удалит persistent
+> volumes с базой и файлами.
