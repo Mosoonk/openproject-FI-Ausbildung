@@ -1,0 +1,98 @@
+name: openproject-daily-report
+
+x-openproject: &openproject
+  image: ${OPENPROJECT_IMAGE:?Set OPENPROJECT_IMAGE in .env}
+  restart: unless-stopped
+  environment: &openproject_environment
+    DATABASE_URL: ${DATABASE_URL:?Set DATABASE_URL in .env}
+    SECRET_KEY_BASE: ${SECRET_KEY_BASE:?Set SECRET_KEY_BASE in .env}
+    OPENPROJECT_HOST__NAME: ${OPENPROJECT_HOST__NAME:?Set OPENPROJECT_HOST__NAME in .env}
+    OPENPROJECT_HTTPS: "false"
+    OPENPROJECT_HSTS: "false"
+    OPENPROJECT_RAILS__CACHE__STORE: memcache
+    OPENPROJECT_CACHE__MEMCACHE__SERVER: cache:11211
+    OPENPROJECT_COLLABORATIVE__EDITING__HOCUSPOCUS__URL: ""
+    OPENPROJECT_EDITION: standard
+    RAILS_ENV: production
+  volumes:
+    - assets:/var/openproject/assets
+  networks:
+    - backend
+
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    stop_grace_period: 10s
+    environment:
+      POSTGRES_DB: openproject
+      POSTGRES_USER: openproject
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U openproject -d openproject"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  cache:
+    image: memcached:1.6-alpine
+    restart: unless-stopped
+    command: ["memcached", "-m", "256"]
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD-SHELL", "printf 'version\r\n' | nc 127.0.0.1 11211 | grep -q VERSION"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  seeder:
+    <<: *openproject
+    restart: "no"
+    command: ./docker/prod/seeder
+    depends_on:
+      db:
+        condition: service_healthy
+      cache:
+        condition: service_healthy
+
+  web:
+    <<: *openproject
+    command: ./docker/prod/web
+    ports:
+      - "${BIND_IP:-0.0.0.0}:${HTTP_PORT:-8080}:8080"
+    depends_on:
+      seeder:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://127.0.0.1:8080/health_checks/default"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+
+  worker:
+    <<: *openproject
+    command: ./docker/prod/worker
+    depends_on:
+      seeder:
+        condition: service_completed_successfully
+
+  cron:
+    <<: *openproject
+    command: ./docker/prod/cron
+    depends_on:
+      seeder:
+        condition: service_completed_successfully
+
+networks:
+  backend:
+
+volumes:
+  pgdata:
+  assets:
