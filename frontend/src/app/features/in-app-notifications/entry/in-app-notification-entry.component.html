@@ -1,5 +1,6 @@
 <div
   class="op-ian-item--row"
+  [class.op-ian-item--row_daily-report]="showDailyReport"
   tabindex="0"
   role="button"
   (click)="onClick()"
@@ -77,6 +78,9 @@
 <div
   class="op-ian-item--middle-line"
   >
+  @if (showDailyReport) {
+    <span class="op-ian-item--daily-report-label">Daily Report</span>
+  }
   <span
     [ngClass]="'op-ian-item--work-package-type __hl_inline_type_' + workPackage.type.id"
     [textContent]="workPackage.type.name">

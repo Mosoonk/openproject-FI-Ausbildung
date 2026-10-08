@@ -7,7 +7,7 @@
     @if ((loading$ | async) === false) {
       @if ((hasNotifications$ | async)) {
         <cdk-virtual-scroll-viewport
-          itemSize="100"
+          itemSize="120"
           class="op-ian-center--viewport"
           >
           <op-in-app-notification-entry *cdkVirtualFor="let records of notifications$ | async; trackBy: trackNotificationGroups; templateCacheSize: 0"

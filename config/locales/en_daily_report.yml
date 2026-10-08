@@ -1,0 +1,29 @@
+en:
+  attributes:
+    entry_date: "Report date"
+    yesterday_text: "Yesterday"
+    today_text: "Today"
+    issue_text: "Problems"
+    risks_text: "Risks"
+    status_type: "Status"
+    comment: "Comment"
+    author_user: "Author"
+    updated_by_user: "Updated by"
+  activerecord:
+    attributes:
+      daily_report/work_package_entry:
+        entry_date: "Report date"
+        yesterday_text: "Yesterday"
+        today_text: "Today"
+        issue_text: "Problems"
+        risks_text: "Risks"
+        status_type: "Status"
+        comment: "Comment"
+        author_user: "Author"
+        updated_by_user: "Updated by"
+    errors:
+      models:
+        daily_report/work_package_entry:
+          attributes:
+            entry_date:
+              too_old: "must not be more than seven days in the past"

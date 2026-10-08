@@ -1,0 +1,261 @@
+<section class="op-daily-report-tab">
+  <h2>Daily Report</h2>
+
+  @if (loadFailed) {
+    <div class="op-daily-report-tab--error" role="alert">Daily Report konnte nicht geladen werden.</div>
+  } @else {
+    @if (!readOnly) {
+      <form
+        #createForm
+        class="op-daily-report-tab--form"
+        (submit)="$event.preventDefault(); createEntry(entryDate.value, entryKindSelect.value, statusType.value, yesterday.value, todayText.value, issue.value, risks.value)"
+      >
+        <div class="op-daily-report-tab--form-header">
+          <h3>Neuen Daily Report erfassen</h3>
+          <p class="op-daily-report-tab--required-hint"><span aria-hidden="true">*</span> Pflichtfeld</p>
+        </div>
+
+        @if (requestError && editingEntryId === undefined) {
+          <div class="op-daily-report-tab--error" role="alert">{{ requestError }}</div>
+        }
+
+        <div class="op-daily-report-tab--form-fields">
+          <div class="form--field">
+            <label class="form--label" for="daily-report-date">Datum <span aria-hidden="true">*</span></label>
+            @if (fieldError('entry_date'); as error) {
+              <p class="op-daily-report-tab--field-error" role="alert">{{ error }}</p>
+            }
+            <div class="form--field-container">
+              <input #entryDate id="daily-report-date" class="form--input" type="date" [value]="todayDate"
+                [min]="earliestParticipantDate" [max]="todayDate" [class.-error]="fieldError('entry_date')"
+                [attr.aria-invalid]="fieldError('entry_date') ? true : null" (input)="clearFieldError('entry_date')"
+                (invalid)="markInvalid('entry_date')" required aria-required="true">
+            </div>
+          </div>
+
+          <div class="form--field">
+            <label class="form--label" for="daily-report-kind">Art</label>
+            <div class="form--field-container form--select-container">
+              <select #entryKindSelect id="daily-report-kind" class="form--select"
+                (change)="onEntryKindChange(entryKindSelect.value, statusType)">
+                <option value="report">Bericht</option>
+                <option value="status">Status</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form--field">
+            <label class="form--label" for="daily-report-status">Beschäftigungsart <span aria-hidden="true">*</span></label>
+            @if (fieldError('status_type'); as error) {
+              <p class="op-daily-report-tab--field-error" role="alert">{{ error }}</p>
+            }
+            <div class="form--field-container form--select-container">
+              <select #statusType id="daily-report-status" class="form--select" required aria-required="true"
+                [class.-error]="fieldError('status_type')" [attr.aria-invalid]="fieldError('status_type') ? true : null"
+                (change)="onStatusTypeChange(statusType.value, entryKindSelect)">
+                <option value="betrieb">Betrieb</option>
+                <option value="berufsschule">Berufsschule</option>
+                <option value="praktikum">Praktikum</option>
+                <option value="krank">Krank</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="op-daily-report-tab--full-width" [hidden]="entryKind !== 'report'">
+            <div class="form--field">
+              <label class="form--label" for="daily-report-yesterday">Was habe ich gestern gemacht? <span aria-hidden="true">*</span></label>
+              @if (fieldError('yesterday_text'); as error) {
+                <p class="op-daily-report-tab--field-error" role="alert">{{ error }}</p>
+              }
+              <div class="form--field-container">
+                <textarea #yesterday id="daily-report-yesterday" class="form--input" [required]="entryKind === 'report'"
+                  [class.-error]="fieldError('yesterday_text')" [attr.aria-invalid]="fieldError('yesterday_text') ? true : null"
+                  [attr.aria-required]="entryKind === 'report'" (input)="clearFieldError('yesterday_text')"
+                  (invalid)="markInvalid('yesterday_text')"></textarea>
+              </div>
+            </div>
+
+            <div class="form--field">
+              <label class="form--label" for="daily-report-today">Was werde ich heute machen? <span aria-hidden="true">*</span></label>
+              @if (fieldError('today_text'); as error) {
+                <p class="op-daily-report-tab--field-error" role="alert">{{ error }}</p>
+              }
+              <div class="form--field-container">
+                <textarea #todayText id="daily-report-today" class="form--input" [required]="entryKind === 'report'"
+                  [class.-error]="fieldError('today_text')" [attr.aria-invalid]="fieldError('today_text') ? true : null"
+                  [attr.aria-required]="entryKind === 'report'" (input)="clearFieldError('today_text')"
+                  (invalid)="markInvalid('today_text')"></textarea>
+              </div>
+            </div>
+
+            <div class="form--field">
+              <label class="form--label" for="daily-report-issue">Probleme <span aria-hidden="true">*</span></label>
+              @if (fieldError('issue_text'); as error) {
+                <p class="op-daily-report-tab--field-error" role="alert">{{ error }}</p>
+              }
+              <div class="form--field-container">
+                <textarea #issue id="daily-report-issue" class="form--input" [required]="entryKind === 'report'"
+                  [class.-error]="fieldError('issue_text')" [attr.aria-invalid]="fieldError('issue_text') ? true : null"
+                  [attr.aria-required]="entryKind === 'report'" (input)="clearFieldError('issue_text')"
+                  (invalid)="markInvalid('issue_text')"></textarea>
+              </div>
+            </div>
+
+            <div class="form--field">
+              <label class="form--label" for="daily-report-risks">Risiken <span aria-hidden="true">*</span></label>
+              @if (fieldError('risks_text'); as error) {
+                <p class="op-daily-report-tab--field-error" role="alert">{{ error }}</p>
+              }
+              <div class="form--field-container">
+                <textarea #risks id="daily-report-risks" class="form--input" [required]="entryKind === 'report'"
+                  [class.-error]="fieldError('risks_text')" [attr.aria-invalid]="fieldError('risks_text') ? true : null"
+                  [attr.aria-required]="entryKind === 'report'" (input)="clearFieldError('risks_text')"
+                  (invalid)="markInvalid('risks_text')"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="op-daily-report-tab--form-actions">
+          <button class="button -primary" type="submit">Speichern</button>
+        </div>
+      </form>
+    }
+
+    @if (entries.length === 0) {
+      <p>Für dieses Work Package gibt es noch keinen Daily Report.</p>
+    }
+
+    @for (entry of entries; track entry.id) {
+      <article class="op-daily-report-tab--entry">
+        <div class="op-daily-report-tab--entry-header">
+          <button class="op-daily-report-tab--entry-toggle" type="button" (click)="toggleEntry(entry.id)"
+            [attr.aria-expanded]="!entryCollapsed(entry.id)">
+            <span class="op-daily-report-tab--entry-heading">
+              <span class="op-daily-report-tab--entry-title">{{ entryTitle(entry) }}</span>
+            </span>
+            <span class="op-daily-report-tab--chevron" [class.-expanded]="!entryCollapsed(entry.id)" aria-hidden="true"></span>
+          </button>
+          @if (entry.correction_history.length > 0) {
+            <button class="op-daily-report-tab--history-button" type="button" (click)="toggleHistory(entry.id, $event)"
+              [attr.aria-expanded]="historyVisible(entry.id)" aria-label="Bearbeitungshistorie anzeigen" title="Bearbeitungshistorie">ⓘ</button>
+          }
+        </div>
+
+        @if (historyVisible(entry.id)) {
+          <section class="op-daily-report-tab--history" aria-label="Bearbeitungshistorie">
+            <h4>Bearbeitungshistorie</h4>
+            @for (correction of entry.correction_history; track correction.revision_number) {
+              <div class="op-daily-report-tab--history-item">
+                <p><strong>{{ correctionDate(correction.created_at) }} · {{ correction.actor.name }}</strong></p>
+                <p><strong>Grund:</strong> {{ correction.comment }}</p>
+                @for (change of correction.changes; track change.field) {
+                  <div class="op-daily-report-tab--change">
+                    <strong>{{ correctionFieldLabel(change.field) }}</strong>
+                    <span><del>{{ change.before || '—' }}</del></span>
+                    <span><ins>{{ change.after || '—' }}</ins></span>
+                  </div>
+                }
+              </div>
+            }
+          </section>
+        }
+
+        @if (!entryCollapsed(entry.id) && editingEntryId === entry.id && !readOnly) {
+          <form class="op-daily-report-tab--edit-form" (submit)="$event.preventDefault(); updateEntry(entry, editComment.value, editYesterday.value, editToday.value, editIssue.value, editRisks.value)">
+            <div class="op-daily-report-tab--edit-header">
+              <h4>Daily Report bearbeiten</h4>
+              <span class="op-daily-report-tab--required-hint"><span aria-hidden="true">*</span> Pflichtfeld</span>
+            </div>
+            @if (requestError) {
+              <div class="op-daily-report-tab--error" role="alert">{{ requestError }}</div>
+            }
+            <div class="op-daily-report-tab--edit-fields">
+              <div class="form--field">
+                <label class="form--label" for="daily-report-edit-comment-{{ entry.id }}">Kommentar zur Bearbeiten <span aria-hidden="true">*</span></label>
+                @if (fieldError('comment'); as error) { <p class="op-daily-report-tab--field-error" role="alert">{{ error }}</p> }
+                <div class="form--field-container">
+                  <textarea #editComment id="daily-report-edit-comment-{{ entry.id }}" class="form--input" required aria-required="true"
+                    [class.-error]="fieldError('comment')" [attr.aria-invalid]="fieldError('comment') ? true : null"
+                    (input)="clearFieldError('comment')" (invalid)="markInvalid('comment')"></textarea>
+                </div>
+              </div>
+              <div class="form--field">
+                <label class="form--label" for="daily-report-edit-yesterday-{{ entry.id }}">Was habe ich gestern gemacht? <span aria-hidden="true">*</span></label>
+                @if (fieldError('yesterday_text'); as error) { <p class="op-daily-report-tab--field-error" role="alert">{{ error }}</p> }
+                <div class="form--field-container">
+                  <textarea #editYesterday id="daily-report-edit-yesterday-{{ entry.id }}" class="form--input" required
+                    [class.-error]="fieldError('yesterday_text')" [attr.aria-invalid]="fieldError('yesterday_text') ? true : null"
+                    (input)="clearFieldError('yesterday_text')" (invalid)="markInvalid('yesterday_text')">{{ entry.yesterday_text }}</textarea>
+                </div>
+              </div>
+              <div class="form--field">
+                <label class="form--label" for="daily-report-edit-today-{{ entry.id }}">Was werde ich heute machen? <span aria-hidden="true">*</span></label>
+                @if (fieldError('today_text'); as error) { <p class="op-daily-report-tab--field-error" role="alert">{{ error }}</p> }
+                <div class="form--field-container">
+                  <textarea #editToday id="daily-report-edit-today-{{ entry.id }}" class="form--input" required
+                    [class.-error]="fieldError('today_text')" [attr.aria-invalid]="fieldError('today_text') ? true : null"
+                    (input)="clearFieldError('today_text')" (invalid)="markInvalid('today_text')">{{ entry.today_text }}</textarea>
+                </div>
+              </div>
+              <div class="form--field">
+                <label class="form--label" for="daily-report-edit-issue-{{ entry.id }}">Probleme <span aria-hidden="true">*</span></label>
+                @if (fieldError('issue_text'); as error) { <p class="op-daily-report-tab--field-error" role="alert">{{ error }}</p> }
+                <div class="form--field-container">
+                  <textarea #editIssue id="daily-report-edit-issue-{{ entry.id }}" class="form--input" required
+                    [class.-error]="fieldError('issue_text')" [attr.aria-invalid]="fieldError('issue_text') ? true : null"
+                    (input)="clearFieldError('issue_text')" (invalid)="markInvalid('issue_text')">{{ entry.issue_text }}</textarea>
+                </div>
+              </div>
+              <div class="form--field">
+                <label class="form--label" for="daily-report-edit-risks-{{ entry.id }}">Risiken <span aria-hidden="true">*</span></label>
+                @if (fieldError('risks_text'); as error) { <p class="op-daily-report-tab--field-error" role="alert">{{ error }}</p> }
+                <div class="form--field-container">
+                  <textarea #editRisks id="daily-report-edit-risks-{{ entry.id }}" class="form--input" required
+                    [class.-error]="fieldError('risks_text')" [attr.aria-invalid]="fieldError('risks_text') ? true : null"
+                    (input)="clearFieldError('risks_text')" (invalid)="markInvalid('risks_text')">{{ entry.risks_text }}</textarea>
+                </div>
+              </div>
+            </div>
+            <div class="op-daily-report-tab--edit-actions">
+              <button class="button -primary" type="submit">Änderungen speichern</button>
+              <button class="button" type="button" (click)="cancelEditing()">Abbrechen</button>
+            </div>
+          </form>
+        } @else if (!entryCollapsed(entry.id)) {
+          <div class="op-daily-report-tab--entry-content">
+            @if (entry.entry_kind === 'status') {
+              <h4>Status</h4>
+              <p><span class="op-daily-report-tab--status">{{ statusLabel(entry.status_type) }}</span></p>
+            } @else {
+              <h4>Was habe ich gestern gemacht?</h4>
+              <p>{{ entry.yesterday_text }}</p>
+              <h4>Was werde ich heute machen?</h4>
+              <p>{{ entry.today_text }}</p>
+              @if (entry.issue_text) {
+                <h4>Probleme</h4>
+                <p>{{ entry.issue_text }}</p>
+              }
+              @if (entry.risks_text) {
+                <h4>Risiken</h4>
+                <p>{{ entry.risks_text }}</p>
+              }
+            }
+
+            @if (!readOnly) {
+              <div class="op-daily-report-tab--actions">
+                @if (entry.can_correct && entry.entry_kind === 'report') {
+                  <button class="button" type="button" (click)="startEditing(entry.id)">Bearbeiten</button>
+                }
+                @if (entry.can_delete) {
+                  <label>Kommentar zur Löschung <span aria-hidden="true">*</span><input #deleteComment required aria-required="true"></label>
+                  <button class="button -danger" type="button" (click)="deleteEntry(entry, deleteComment.value)">Löschen</button>
+                }
+              </div>
+            }
+          </div>
+        }
+      </article>
+    }
+  }
+</section>

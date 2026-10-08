@@ -6,6 +6,7 @@
     @if (showTabs) {
       <op-wp-tabs [workPackage]="workPackage"
         [view]="'split'"
+        [currentTabId]="activeTab"
        />
     }
     @if (workPackage) {

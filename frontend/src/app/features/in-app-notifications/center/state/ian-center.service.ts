@@ -117,7 +117,10 @@ export class IanCenterService extends UntilDestroyedMixin {
     .selectNotifications$
     .pipe(
       map((notifications) => (
-        groupBy(notifications, (notification) => notification._links.resource?.href || 'none')
+        groupBy(notifications, (notification) => {
+          const resource = notification._links.resource?.href || 'none';
+          return notification.reason === 'daily_report' ? `${resource}::daily_report` : resource;
+        })
       )),
       distinctUntilChanged(),
     );

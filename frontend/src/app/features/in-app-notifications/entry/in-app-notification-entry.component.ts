@@ -72,6 +72,7 @@ export class InAppNotificationEntryComponent extends UntilDestroyedMixin impleme
   private latestWorkPackage:WorkPackageResource|null = null;
 
   showDateAlert = false;
+  showDailyReport = false;
   hasReminderAlert = false;
 
   loading$ = this.storeService.query.selectLoading();
@@ -97,6 +98,7 @@ export class InAppNotificationEntryComponent extends UntilDestroyedMixin impleme
 
     this.hasReminderAlert = this.hasNotificationReason('reminder');
     this.showDateAlert = this.hasNotificationReason('dateAlert');
+    this.showDailyReport = this.hasNotificationReason('daily_report');
     this.buildTranslatedReason();
     this.buildProject();
     this.loadWorkPackage();
@@ -137,7 +139,7 @@ export class InAppNotificationEntryComponent extends UntilDestroyedMixin impleme
       return;
     }
 
-    const tab = this.showDateAlert ? 'overview' : 'activity';
+    const tab = this.showDailyReport ? 'daily_report' : (this.showDateAlert ? 'overview' : 'activity');
     const id = this.latestWorkPackage?.displayId ?? this.workPackageId;
     this.storeService.openSplitScreen(id, tab);
   }

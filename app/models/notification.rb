@@ -43,7 +43,8 @@ class Notification < ApplicationRecord
     date_alert_start_date: 10,
     date_alert_due_date: 11,
     shared: 12,
-    reminder: 13
+    reminder: 13,
+    daily_report: 14
   }.freeze
 
   enum :reason, REASONS, prefix: true
@@ -57,6 +58,7 @@ class Notification < ApplicationRecord
   has_one :reminder, through: :reminder_notification
 
   include Scopes::Scoped
+
   scopes :unsent_reminders_before,
          :mail_reminder_unsent,
          :mail_alert_unsent,

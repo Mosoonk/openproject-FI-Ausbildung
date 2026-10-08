@@ -1009,6 +1009,11 @@ Rails.application.routes.draw do
 
     get "hover_card" => "work_packages/hover_card#show", on: :member
     get "project_attributes" => "work_packages/project_attributes_tab#index", on: :member
+    resources :daily_report_entries,
+              controller: "work_packages/daily_report_entries",
+              only: %i[index create update destroy] do
+      post :restore, on: :member
+    end
 
     get "generate_pdf_dialog" => "work_packages#generate_pdf_dialog", on: :member
     post "generate_pdf" => "work_packages#generate_pdf", on: :member

@@ -413,6 +413,7 @@ import {
   WorkPackageSplitCreateEntryComponent,
 } from 'core-app/features/work-packages/routing/wp-split-create/wp-split-create-entry.component';
 import { WorkPackageProjectAttributesTabComponent } from 'core-app/features/work-packages/components/wp-single-view-tabs/project-attributes-tab/op-project-attributes-tab.component';
+import { DailyReportTabComponent } from 'core-app/features/work-packages/components/wp-single-view-tabs/daily-report-tab/daily-report-tab.component';
 
 @NgModule({
   imports: [
@@ -599,6 +600,7 @@ import { WorkPackageProjectAttributesTabComponent } from 'core-app/features/work
 
     // Project attributes tab
     WorkPackageProjectAttributesTabComponent,
+    DailyReportTabComponent,
 
     // Split view
     WorkPackageDetailsViewButtonComponent,
