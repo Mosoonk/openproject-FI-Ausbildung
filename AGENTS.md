@@ -1,3 +1,25 @@
+# Daily Report: OpenProject core-fork instructions
+
+## Project override
+
+This working copy implements Daily Report as a maintained native customization
+of exact OpenProject tag `v17.8.0`, not as a plugin or standalone service.
+Use the existing Rails application, session, CSRF protection, PostgreSQL,
+models and authorization infrastructure. Keep feature data in dedicated
+`daily_report_*` tables; do not use journals, comments or custom fields for
+report text, and do not introduce FastAPI, OAuth, API synchronization or a
+second database.
+
+Work only in the active phase. Feature reads and writes must enforce native
+Work Package visibility server-side. Participants may create only their own
+entry for a directly or group-assigned Work Package; subsequent participant
+edits/deletes are forbidden. Preserve append-only revision/audit history and
+do not put report text into logs.
+
+The local development stack runs in WSL2 Docker. Use the tag's actual versions:
+Ruby 4.0.6, Bundler 4.0.16, Node 24.15.0 and npm 11. Do not follow the
+superseded version values below when they disagree with these requirements.
+
 # OpenProject AI Coding Agent Instructions
 
 > **Note for developers**: You can create `AGENTS.local.md` (or `CLAUDE.local.md`) in this directory to add your own custom instructions or preferences for AI coding agents. These files are git-ignored and will not be committed to the repository.
