@@ -85,9 +85,18 @@ export class WpTabsComponent implements OnInit {
   }
 
   private getDisplayableTabs():WpTabDefinition[]{
-    return this
+    let tabs = this
       .wpTabsService
-      .getDisplayableTabs(this.workPackage, this.routedFromAngular)
+      .getDisplayableTabs(this.workPackage, this.routedFromAngular);
+
+    if (window.location.pathname.startsWith('/notifications/')) {
+      const dailyReportTab = this.wpTabsService.tabs.find(({ id }) => id === 'daily_report');
+      if (dailyReportTab) {
+        tabs = [dailyReportTab, ...tabs.filter(({ id }) => id !== 'daily_report')];
+      }
+    }
+
+    return tabs
       .map((tab) => {
         if (this.routedFromAngular) {
           return ({

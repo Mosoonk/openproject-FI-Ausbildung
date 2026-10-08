@@ -60,6 +60,7 @@ import {
   workPackageFilesCount,
 } from 'core-app/features/work-packages/components/wp-tabs/services/wp-tabs/wp-files-count.function';
 import { WorkPackageProjectAttributesTabComponent } from 'core-app/features/work-packages/components/wp-single-view-tabs/project-attributes-tab/op-project-attributes-tab.component';
+import { DailyReportTabComponent } from 'core-app/features/work-packages/components/wp-single-view-tabs/daily-report-tab/daily-report-tab.component';
 
 @Injectable({
   providedIn: 'root',
@@ -139,6 +140,11 @@ export class WorkPackageTabsService {
         name: this.I18n.t('js.work_packages.tabs.overview'),
         id: 'overview',
         displayable: (_, $state) => $state ? $state.includes('**.details.*') : false,
+      },
+      {
+        id: 'daily_report',
+        component: DailyReportTabComponent,
+        name: 'Daily Report',
       },
       {
         id: 'activity',

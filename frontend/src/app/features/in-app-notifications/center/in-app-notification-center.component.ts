@@ -117,6 +117,10 @@ export class InAppNotificationCenterComponent implements OnInit {
       title: this.I18n.t('js.notifications.reasons.watched'),
     },
     {
+      key: 'daily_report',
+      title: this.I18n.t('js.notifications.reasons.daily_report'),
+    },
+    {
       key: 'dateAlert',
       title: this.I18n.t('js.notifications.reasons.dateAlert'),
     },

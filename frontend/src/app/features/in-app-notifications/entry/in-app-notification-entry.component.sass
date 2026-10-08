@@ -9,10 +9,9 @@ $ian-bg-selected-color: var(--box-list-item-selected-bg-color)
 $ian-bg-selected-hover-color: var(--box-list-item-selected-bg-hover-color)
 // Notification center is special as it does not allow multi-select. So the selected element is always the pressed one.
 // We can therefore direclty set the pressed border color on the selected element
-$ian-active-border-color: var(--box-list-item-pressed-border-color)
 // This needs to be set in the itemSize of
 // the virtual scroller
-$ian-height: 100px
+$ian-height: 120px
 $subject-font-size: 14px
 
 .op-ian-item
@@ -35,17 +34,17 @@ $subject-font-size: 14px
 
   &_selected
     background: $ian-bg-selected-color
-    border-color: $ian-active-border-color
+    border-color: $ian-border-color
     &:hover
       background: $ian-bg-selected-hover-color
 
     // Since the ian only have a top border, we need to highlight the next sibling as well to
     // create the impression that the selected ian has a top and bottom border
     & + .op-ian-item
-      border-top-color: $ian-active-border-color
+      border-top-color: $ian-border-color
 
     &:last-of-type
-      border-bottom-color: $ian-active-border-color
+      border-bottom-color: $ian-border-color
 
   &_read
     background: $ian-bg-read-color
@@ -63,6 +62,11 @@ $subject-font-size: 14px
     align-items: center
     cursor: pointer
 
+    &_daily-report
+      border-left: 4px solid var(--accent-color)
+      padding-left: 8px
+      background: var(--bgColor-accent-muted)
+
   &--top-line
     grid-area: header
     display: grid
@@ -74,10 +78,24 @@ $subject-font-size: 14px
 
   &--middle-line
     grid-area: body
-    display: grid
-    grid-template-columns: auto 1fr
-    grid-column-gap: 5px
+    display: flex
+    align-items: center
+    gap: 5px
+    min-width: 0
     line-height: normal
+
+  &--daily-report-label
+    display: inline-flex
+    align-items: center
+    width: max-content
+    min-height: 20px
+    margin-right: 5px
+    padding: 0 7px
+    border-radius: 999px
+    background: var(--bgColor-done-emphasis, #8250df)
+    color: var(--fgColor-onEmphasis, #fff)
+    font-size: 12px
+    font-weight: var(--base-text-weight-semibold)
 
   &--bottom-line
     grid-area: footer
