@@ -1,6 +1,8 @@
 # Daily Report — Phase 3: native Work Package UI
 
-Completed against the OpenProject `v17.8.0` core fork.
+Originally completed against the OpenProject `v17.8.0` core fork. The feature
+was carried into `v17.9.1`; see [the upgrade record](daily-report-upgrade-17.9.1.md)
+for the new baseline and validation status.
 
 - The `Daily Report` Work Package tab is registered immediately before
   `Activity`; the split-view route opens it by default.

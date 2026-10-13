@@ -3,7 +3,7 @@
 ## Project override
 
 This working copy implements Daily Report as a maintained native customization
-of exact OpenProject tag `v17.8.0`, not as a plugin or standalone service.
+of exact OpenProject tag `v17.9.1`, not as a plugin or standalone service.
 Use the existing Rails application, session, CSRF protection, PostgreSQL,
 models and authorization infrastructure. Keep feature data in dedicated
 `daily_report_*` tables; do not use journals, comments or custom fields for
@@ -16,7 +16,7 @@ entry for a directly or group-assigned Work Package; subsequent participant
 edits/deletes are forbidden. Preserve append-only revision/audit history and
 do not put report text into logs.
 
-The local development stack runs in WSL2 Docker. Use the tag's actual versions:
+The local development stack runs in Docker. Use the tag's actual versions:
 Ruby 4.0.6, Bundler 4.0.16, Node 24.15.0 and npm 11. Do not follow the
 superseded version values below when they disagree with these requirements.
 

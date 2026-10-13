@@ -26,13 +26,13 @@ Daily Report нет.
 Для текущего сервера:
 
 ```text
-http://172.17.43.45:8080
+http://172.17.44.49:8080
 ```
 
 Полный пример URL для Work Package `75`:
 
 ```text
-http://172.17.43.45:8080/work_packages/75/daily_report_entries.json
+http://172.17.44.49:8080/work_packages/75/daily_report_entries.json
 ```
 
 > [!WARNING]
@@ -132,7 +132,7 @@ OpenProject API-токен не имеет отдельного read-only scope.
 
 ```http
 GET /work_packages/{work_package_id}/daily_report_entries.json HTTP/1.1
-Host: 172.17.43.45:8080
+Host: 172.17.44.49:8080
 Accept: application/json
 X-OpenProject-API-Key: <api-token>
 ```
@@ -307,7 +307,7 @@ application/json
 ### curl в Linux
 
 ```bash
-export OPENPROJECT_BASE_URL='http://172.17.43.45:8080'
+export OPENPROJECT_BASE_URL='http://172.17.44.49:8080'
 export OPENPROJECT_API_TOKEN='replace-with-token'
 export WORK_PACKAGE_ID='75'
 
@@ -330,7 +330,7 @@ curl --fail-with-body --silent --show-error \
 ### PowerShell
 
 ```powershell
-$baseUrl = 'http://172.17.43.45:8080'
+$baseUrl = 'http://172.17.44.49:8080'
 $workPackageId = 75
 $token = $env:OPENPROJECT_API_TOKEN
 
@@ -350,7 +350,7 @@ $reports | ConvertTo-Json -Depth 10
 ### JavaScript/TypeScript на сервере
 
 ```typescript
-const baseUrl = "http://172.17.43.45:8080";
+const baseUrl = "http://172.17.44.49:8080";
 const workPackageId = 75;
 const token = process.env.OPENPROJECT_API_TOKEN;
 
@@ -385,7 +385,7 @@ console.log(reports);
 import os
 import requests
 
-base_url = "http://172.17.43.45:8080"
+base_url = "http://172.17.44.49:8080"
 work_package_id = 75
 token = os.environ["OPENPROJECT_API_TOKEN"]
 
