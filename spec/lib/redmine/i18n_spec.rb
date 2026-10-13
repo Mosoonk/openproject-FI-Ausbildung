@@ -125,10 +125,21 @@ module OpenProject
         expect(all_languages).not_to(be_any { |l| l.to_s.start_with?("js-") })
       end
 
+      it "does not expose Daily Report translation files as languages" do
+        expect(all_languages).not_to include("de_daily_report", "en_daily_report")
+      end
+
       # it is OK if more languages exist
       it "has multiple languages" do
         expect(all_languages).to include "en", "de", "fr", "es"
         expect(all_languages.size).to be >= 25
+      end
+    end
+
+    describe "Daily Report translations" do
+      it "loads the translations from their locale-specific files" do
+        expect(described_class.t("attributes.entry_date", locale: :de)).to eq("Berichtsdatum")
+        expect(described_class.t("attributes.entry_date", locale: :en)).to eq("Report date")
       end
     end
 

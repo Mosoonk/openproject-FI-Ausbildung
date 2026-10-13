@@ -72,7 +72,7 @@ export function makeSplitViewRoutes(baseRoute:string,
         const params = trans.params('to');
         return {
           state: `${routeName}.details.tabs`,
-          params: { ...params, tabIdentifier: 'overview' },
+          params: { ...params, tabIdentifier: 'daily_report' },
         };
       },
       reloadOnSearch: false,

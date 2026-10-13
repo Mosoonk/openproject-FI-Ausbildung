@@ -66,6 +66,13 @@ Rails.application.reloader.to_prepare do
                      require: :loggedin,
                      visible: -> { OpenProject::Configuration.backup_enabled? }
 
+      # Ausbilder is a global Daily Report role. Work Package visibility is
+      # still verified by the DailyReport policy before this permission is used.
+      map.permission :manage_daily_report_entries,
+                     {},
+                     permissible_on: :global,
+                     require: :loggedin
+
       map.permission :create_user,
                      {
                        users: %i[index show new create resend_invitation configure_view_modal],

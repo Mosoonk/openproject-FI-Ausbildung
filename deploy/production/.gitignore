@@ -1,0 +1,6 @@
+.env*
+!.env.example
+*.dump
+*.sql
+*.tar
+*.zip

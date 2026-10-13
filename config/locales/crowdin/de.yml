@@ -4785,6 +4785,7 @@ de:
       responsible: Verantwortlich
       shared: Geteilt
       watched: Beobachter
+      daily_report: Daily Report
     send_notifications: Sende Benachrichtigungen für diese Aktion
     work_packages:
       subject:
