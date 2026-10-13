@@ -1,12 +1,12 @@
 # Развёртывание OpenProject FI Ausbildung на Fedora
 
 Эта инструкция устанавливает кастомный OpenProject с нативной функцией Daily
-Report на сервер Fedora `172.17.43.45` и восстанавливает базу из backup.
+Report на сервер Fedora `172.17.44.49` и восстанавливает базу из backup.
 
 Используемый образ:
 
 ```text
-ghcr.io/mosoonk/openproject-fi-ausbildung:sha-3b87cc8
+ghcr.io/mosoonk/openproject-fi-ausbildung:17.9.1-dr.1
 ```
 
 Backup `backup_file_name.zip` содержит только
@@ -23,13 +23,13 @@ Backup `backup_file_name.zip` содержит только
 Откройте PowerShell:
 
 ```powershell
-ssh ausbildung-pc@172.17.43.45 "mkdir -p ~/openproject-FI"
+ssh ausbildung-pc@172.17.44.49 "mkdir -p ~/openproject-FI"
 
-scp C:\Users\maksym.shkurenko\Documents\openproject-daily-report\deploy\production\compose.yml `
-    ausbildung-pc@172.17.43.45:~/openproject-FI/
+scp C:\Users\maksym.shkurenko\Documents\openproject\upgrade-17.9.1\deploy\production\compose.yml `
+    ausbildung-pc@172.17.44.49:~/openproject-FI/
 
 scp C:\path\to\backup_file_name.zip `
-    ausbildung-pc@172.17.43.45:~/openproject-FI/
+    ausbildung-pc@172.17.44.49:~/openproject-FI/
 ```
 
 SSH запросит пароль пользователя сервера, если авторизация по ключу ещё не
@@ -38,7 +38,7 @@ SSH запросит пароль пользователя сервера, ес�
 ## 2. Подключение к серверу
 
 ```powershell
-ssh ausbildung-pc@172.17.43.45
+ssh ausbildung-pc@172.17.44.49
 ```
 
 Все следующие команды, кроме явно отмеченных, выполняются на сервере Fedora.
@@ -62,7 +62,7 @@ sudo dnf install -y \
 
 ## 4. Проверка конфликта сетей
 
-Сервер использует адрес `172.17.43.45`, а стандартная сеть Docker часто
+Сервер использует адрес `172.17.44.49`, а стандартная сеть Docker часто
 занимает `172.17.0.0/16`. Сначала проверьте существующие маршруты:
 
 ```bash
@@ -129,9 +129,9 @@ POSTGRES_PASSWORD="$(openssl rand -hex 32)"
 SECRET_KEY_BASE="$(openssl rand -hex 64)"
 
 cat > .env <<EOF
-OPENPROJECT_IMAGE=ghcr.io/mosoonk/openproject-fi-ausbildung:sha-3b87cc8
-OPENPROJECT_HOST__NAME=172.17.43.45:8080
-BIND_IP=172.17.43.45
+OPENPROJECT_IMAGE=ghcr.io/mosoonk/openproject-fi-ausbildung:17.9.1-dr.1
+OPENPROJECT_HOST__NAME=172.17.44.49:8080
+BIND_IP=172.17.44.49
 HTTP_PORT=8080
 POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
 DATABASE_URL=postgresql://openproject:${POSTGRES_PASSWORD}@db:5432/openproject?pool=20
@@ -161,7 +161,7 @@ sudo docker compose --env-file .env pull
 
 ```bash
 sudo docker image inspect \
-  ghcr.io/mosoonk/openproject-fi-ausbildung:sha-3b87cc8 \
+  ghcr.io/mosoonk/openproject-fi-ausbildung:17.9.1-dr.1 \
   --format '{{index .RepoDigests 0}}'
 ```
 
@@ -246,7 +246,7 @@ sudo docker compose --env-file .env logs --tail=150 seeder web worker
 Проверьте health endpoint непосредственно на сервере:
 
 ```bash
-curl --fail http://172.17.43.45:8080/health_checks/default
+curl --fail http://172.17.44.49:8080/health_checks/default
 ```
 
 ## 12. Настройка firewall
@@ -264,7 +264,7 @@ sudo firewall-cmd --list-all
 OpenProject должен быть доступен по адресу:
 
 ```text
-http://172.17.43.45:8080
+http://172.17.44.49:8080
 ```
 
 ## 13. Проверка после восстановления

@@ -1,6 +1,6 @@
 # Daily Report production deployment
 
-This Compose stack runs the customized OpenProject 17.8.0 image. It is
+This Compose stack runs the customized OpenProject 17.9.1 image. It is
 separate from the repository root development stack and must not be pointed at
 the development database or volumes.
 
@@ -23,6 +23,8 @@ WebSocket endpoint. Daily Report does not depend on collaborative editing.
    example, with `openssl rand -hex 32` and `openssl rand -hex 64`.
 4. Make the exact custom image tag available on the host (prefer a private
    registry). Never use `latest` for this fork.
+   The `17.9.1-dr.1` example tag is published by manually running the Daily
+   Report container workflow with that release tag after CI checks pass.
 5. Validate and start:
 
    ```sh
