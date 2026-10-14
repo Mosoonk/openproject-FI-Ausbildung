@@ -11,9 +11,12 @@ module DailyReport
     private
 
     def recipients(entry)
+      watcher_ids = User.watcher_recipients(entry.work_package).select(:id)
+      daily_report_ids = daily_report_recipients(entry.work_package).select(:id)
+
       User
-        .watcher_recipients(entry.work_package)
-        .or(daily_report_recipients(entry.work_package))
+        .where(id: watcher_ids)
+        .or(User.where(id: daily_report_ids))
         .distinct
     end
 

@@ -67,6 +67,16 @@ RSpec.describe DailyReport::NotifyWatchersService, type: :model do
     )
   end
 
+  it "combines watcher and Daily Report subscribers" do
+    subscriber = create(:user, member_with_permissions: { project => %i[view_work_packages] })
+    create(:notification_setting, user: subscriber, daily_report: true)
+
+    described_class.new.call(entry:, actor:, event: "created")
+
+    expect(Notification.where(resource: work_package).pluck(:recipient_id))
+      .to contain_exactly(watcher_user.id, subscriber.id)
+  end
+
   it "respects a project-specific opt-out for Daily Reports" do
     subscriber = create(:user, member_with_permissions: { project => %i[view_work_packages] })
     create(:notification_setting, user: subscriber, daily_report: true)
