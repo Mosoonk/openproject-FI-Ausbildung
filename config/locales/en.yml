@@ -4764,9 +4764,9 @@ en:
         submit: "Update notification sound"
         preview: "Test sound"
         options:
-          chime: "Chime"
-          double_chime: "Double chime"
-          soft: "Soft chime"
+          chime: "Notification 1"
+          double_chime: "Notification 2"
+          soft: "Message ping"
       date_alerts:
         description: "You can configure date alerts for work packages where you are assignee, accountable and/or watcher to be automatically notified a few days prior to approaching or overdue deadlines."
         due_date: "Finish date"
