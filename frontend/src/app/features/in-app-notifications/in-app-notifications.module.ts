@@ -32,6 +32,9 @@ import { NgModule } from '@angular/core';
 import {
   InAppNotificationBellComponent,
 } from 'core-app/features/in-app-notifications/bell/in-app-notification-bell.component';
+import {
+  NotificationSoundPreviewComponent,
+} from 'core-app/features/in-app-notifications/bell/notification-sound-preview.component';
 import { IanBellService } from 'core-app/features/in-app-notifications/bell/state/ian-bell.service';
 import {
   InAppNotificationCenterComponent,
@@ -57,6 +60,7 @@ import { InAppNotificationStatusComponent } from './entry/status/in-app-notifica
 @NgModule({
   declarations: [
     InAppNotificationBellComponent,
+    NotificationSoundPreviewComponent,
     InAppNotificationCenterComponent,
     InAppNotificationEntryComponent,
     InAppNotificationStatusComponent,

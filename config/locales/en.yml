@@ -4762,6 +4762,7 @@ en:
         enabled: "Play a sound for new notifications"
         sound: "Sound"
         submit: "Update notification sound"
+        preview: "Test sound"
         options:
           chime: "Chime"
           double_chime: "Double chime"

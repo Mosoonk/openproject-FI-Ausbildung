@@ -80,6 +80,14 @@ See COPYRIGHT and LICENSE files for more details.
   end
 %>
 
+<%= angular_component_tag(
+      "opce-notification-sound-preview",
+      inputs: {
+        sound: notification_sound_form_model.sound,
+        label: t("my_account.notifications.sound.preview")
+      }
+    ) %>
+
 <%= render(Primer::BaseComponent.new(tag: :div, classes: "op-admin-settings-form-wrapper")) do %>
   <%= render(Primer::Beta::Subhead.new(mt: 3)) do |component|
         component.with_heading(size: :medium) { t("my_account.notifications.project_specific_settings.title") }

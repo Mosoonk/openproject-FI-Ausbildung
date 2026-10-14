@@ -4641,6 +4641,7 @@ de:
         enabled: Ton bei neuen Benachrichtigungen abspielen
         sound: Ton
         submit: Benachrichtigungston aktualisieren
+        preview: Ton testen
         options:
           chime: Klang
           double_chime: Doppelter Klang
