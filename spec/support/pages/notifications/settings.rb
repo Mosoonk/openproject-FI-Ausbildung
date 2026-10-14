@@ -62,6 +62,7 @@ module Pages
           work_package_processed
           work_package_prioritized
           work_package_scheduled
+          daily_report
         ].each do |type|
           expect(page).to have_css("input[type='checkbox'][data-test-selector='global-notification-type-#{type}']") { |checkbox|
             checkbox.checked? == setting[type]

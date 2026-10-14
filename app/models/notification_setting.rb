@@ -42,6 +42,7 @@ class NotificationSetting < ApplicationRecord
   WORK_PACKAGE_PROCESSED = :work_package_processed
   WORK_PACKAGE_PRIORITIZED = :work_package_prioritized
   WORK_PACKAGE_SCHEDULED = :work_package_scheduled
+  DAILY_REPORT = :daily_report
   NEWS_ADDED = :news_added
   NEWS_COMMENTED = :news_commented
   DOCUMENT_ADDED = :document_added
@@ -74,7 +75,8 @@ class NotificationSetting < ApplicationRecord
       WORK_PACKAGE_COMMENTED,
       WORK_PACKAGE_PROCESSED,
       WORK_PACKAGE_PRIORITIZED,
-      WORK_PACKAGE_SCHEDULED
+      WORK_PACKAGE_SCHEDULED,
+      DAILY_REPORT
     ]
   end
 

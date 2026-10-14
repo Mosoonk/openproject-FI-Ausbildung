@@ -4773,6 +4773,7 @@ en:
         work_package_prioritized: "All priority changes"
         work_package_processed: "All status changes"
         work_package_scheduled: "All date changes"
+        daily_report: "Daily Reports"
       participating:
         assignee: "Assignee"
         description: "You will always receive a notification whenever you are mentioned, and for changes to work packages you are watching. These cannot be disabled. However, you can choose to enable or disable receiving notifications for changes to work packages that concern you (where you are assignee, accountable or are shared with you)."

@@ -3,12 +3,30 @@
 module DailyReport
   class NotifyWatchersService
     def call(entry:, actor:, event:)
-      User.watcher_recipients(entry.work_package).where.not(id: actor.id).find_each do |recipient|
+      recipients(entry).where.not(id: actor.id).find_each do |recipient|
         notify(recipient:, entry:, actor:, event:)
       end
     end
 
     private
+
+    def recipients(entry)
+      User
+        .watcher_recipients(entry.work_package)
+        .or(daily_report_recipients(entry.work_package))
+        .distinct
+    end
+
+    def daily_report_recipients(work_package)
+      User
+        .allowed(:view_work_packages, work_package.project)
+        .where(
+          id: NotificationSetting
+                .applicable(work_package.project)
+                .where(daily_report: true)
+                .select(:user_id)
+        )
+    end
 
     def notify(recipient:, entry:, actor:, event:)
       ApplicationRecord.transaction do

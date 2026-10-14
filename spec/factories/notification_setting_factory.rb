@@ -15,6 +15,7 @@ FactoryBot.define do
     work_package_processed { false }
     work_package_prioritized { false }
     work_package_scheduled { false }
+    daily_report { false }
     news_added { false }
     news_commented { false }
     document_added { false }
