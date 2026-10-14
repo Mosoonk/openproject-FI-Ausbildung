@@ -48,6 +48,7 @@ import {
 } from 'core-app/core/state/in-app-notifications/in-app-notifications.actions';
 import { ActionsService } from 'core-app/core/state/actions/actions.service';
 import { IanBellStore } from 'core-app/features/in-app-notifications/bell/state/ian-bell.store';
+import { NotificationSound, NotificationSoundService } from 'core-app/features/in-app-notifications/bell/state/notification-sound.service';
 
 /**
  * The BellService is injected into root here (and the store is thus made global),
@@ -59,6 +60,7 @@ import { IanBellStore } from 'core-app/features/in-app-notifications/bell/state/
 export class IanBellService {
   readonly actions$ = inject(ActionsService);
   readonly resourceService = inject(InAppNotificationsResourceService);
+  readonly notificationSound = inject(NotificationSoundService);
 
   readonly id = 'ian-bell';
 
@@ -74,7 +76,12 @@ export class IanBellService {
     });
     this.query.unreadCountIncreased$.pipe(skip(1)).subscribe((count) => {
       this.actions$.dispatch(notificationCountIncreased({ origin: this.id, count }));
+      this.notificationSound.play();
     });
+  }
+
+  configureNotificationSound(enabled:boolean, sound:NotificationSound):void {
+    this.notificationSound.configure(enabled, sound);
   }
 
   fetchUnread():Observable<number> {

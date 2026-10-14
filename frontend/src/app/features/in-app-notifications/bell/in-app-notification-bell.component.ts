@@ -33,6 +33,7 @@ import { ActiveWindowService } from 'core-app/core/active-window/active-window.s
 import { PathHelperService } from 'core-app/core/path-helper/path-helper.service';
 import { ApiV3Service } from 'core-app/core/apiv3/api-v3.service';
 import { IanBellService } from 'core-app/features/in-app-notifications/bell/state/ian-bell.service';
+import { NotificationSound } from 'core-app/features/in-app-notifications/bell/state/notification-sound.service';
 import { populateInputsFromDataset } from 'core-app/shared/components/dataset-inputs';
 
 @Component({
@@ -50,6 +51,8 @@ export class InAppNotificationBellComponent implements OnInit {
   readonly pathHelper = inject(PathHelperService);
 
   @Input() interval = 50000;
+  @Input() soundEnabled = false;
+  @Input() sound:NotificationSound = 'chime';
 
   polling$:Observable<number>;
 
@@ -73,6 +76,7 @@ export class InAppNotificationBellComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.storeService.configureNotificationSound(this.soundEnabled, this.sound);
     this.polling$ = merge(
       timer(10, this.interval).pipe(filter(() => this.activeWindow.isActive)),
       timer(10, this.interval * 10).pipe(filter(() => !this.activeWindow.isActive)),

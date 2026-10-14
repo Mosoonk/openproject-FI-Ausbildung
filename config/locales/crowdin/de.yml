@@ -4635,6 +4635,16 @@ de:
         submit_button: Erinnerungstage aktualisieren
         title: E-Mail-Erinnerungen an diesen Tagen erhalten
     notifications:
+      sound:
+        title: Benachrichtigungston
+        description: Einen Ton bei neuen Benachrichtigungen abspielen, solange OpenProject geöffnet ist.
+        enabled: Ton bei neuen Benachrichtigungen abspielen
+        sound: Ton
+        submit: Benachrichtigungston aktualisieren
+        options:
+          chime: Klang
+          double_chime: Doppelter Klang
+          soft: Leiser Klang
       date_alerts:
         description: Sie können Terminbenachrichtigungen für Arbeitspakete einrichten, bei denen Sie verantwortlich oder zugewiesen oder als Beobachter eingetragen sind, um einige Tage vor bevorstehenden oder bereits überschrittenen Terminen automatisch benachrichtigt zu werden.
         due_date: Endtermin

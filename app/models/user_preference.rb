@@ -218,6 +218,20 @@ class UserPreference < ApplicationRecord
     self.settings = settings.merge("pause_reminders" => pause_reminders_hash(hash))
   end
 
+  def notification_sound
+    super.presence || { enabled: false, sound: "chime" }.with_indifferent_access
+  end
+
+  def notification_sound=(value)
+    hash = value.to_h.with_indifferent_access
+    self.settings = settings.merge(
+      "notification_sound" => {
+        "enabled" => ActiveRecord::Type::Boolean.new.cast(hash[:enabled]),
+        "sound" => hash[:sound].presence_in(%w[chime double_chime soft]) || "chime"
+      }
+    )
+  end
+
   def dismissed_banner?(feature)
     dismissed_enterprise_banners.key?(feature.to_s)
   end

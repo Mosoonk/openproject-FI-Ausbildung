@@ -39,13 +39,15 @@ module My
                   :update_non_participating_url,
                   :update_date_alerts_url,
                   :new_project_settings_url,
-                  :project_notification_settings
+                  :project_notification_settings,
+                  :update_sound_url
 
       def initialize(user:,
                      global_notification_setting:,
                      update_participating_url:,
                      update_non_participating_url:,
                      update_date_alerts_url:,
+                     update_sound_url:,
                      new_project_settings_url:,
                      edit_project_settings_url:,
                      project_setting_url:)
@@ -56,6 +58,7 @@ module My
         @update_participating_url = update_participating_url
         @update_non_participating_url = update_non_participating_url
         @update_date_alerts_url = update_date_alerts_url
+        @update_sound_url = update_sound_url
         @new_project_settings_url = new_project_settings_url
         @edit_project_settings_url_builder = edit_project_settings_url
         @project_setting_url_builder = project_setting_url
@@ -68,6 +71,11 @@ module My
 
       def project_setting_url(project_id)
         @project_setting_url_builder.call(project_id)
+      end
+
+      def notification_sound_form_model
+        sound = @user.pref.notification_sound
+        My::NotificationSoundForm::NotificationSoundFormModel.new(enabled: sound[:enabled], sound: sound[:sound])
       end
     end
   end

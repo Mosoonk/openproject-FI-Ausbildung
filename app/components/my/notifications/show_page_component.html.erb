@@ -68,6 +68,18 @@ See COPYRIGHT and LICENSE files for more details.
   end
 %>
 
+<%=
+  settings_primer_form_with(
+    model: notification_sound_form_model,
+    scope: "pref[notification_sound]",
+    url: update_sound_url,
+    method: :patch,
+    data: { turbo: false, test_selector: "notification-sound-form" }
+  ) do |form|
+    render(My::NotificationSoundForm.new(form))
+  end
+%>
+
 <%= render(Primer::BaseComponent.new(tag: :div, classes: "op-admin-settings-form-wrapper")) do %>
   <%= render(Primer::Beta::Subhead.new(mt: 3)) do |component|
         component.with_heading(size: :medium) { t("my_account.notifications.project_specific_settings.title") }

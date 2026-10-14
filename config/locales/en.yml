@@ -4756,6 +4756,16 @@ en:
         submit_button: "Update reminder days"
         title: "Receive email reminders on these days"
     notifications:
+      sound:
+        title: "Notification sound"
+        description: "Play a sound for new in-app notifications while OpenProject is open."
+        enabled: "Play a sound for new notifications"
+        sound: "Sound"
+        submit: "Update notification sound"
+        options:
+          chime: "Chime"
+          double_chime: "Double chime"
+          soft: "Soft chime"
       date_alerts:
         description: "You can configure date alerts for work packages where you are assignee, accountable and/or watcher to be automatically notified a few days prior to approaching or overdue deadlines."
         due_date: "Finish date"

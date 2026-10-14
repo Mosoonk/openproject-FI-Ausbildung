@@ -97,6 +97,10 @@ module API
                    end
                  end
 
+        property :notification_sound,
+                 getter: ->(*) { notification_sound.transform_keys { |key| key.camelize(:lower) } },
+                 setter: ->(fragment:, **) { self.notification_sound = fragment.transform_keys(&:underscore) }
+
         property :workdays
 
         property :notification_settings,
