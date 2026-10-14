@@ -18,7 +18,7 @@
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
 //++
 
-import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Input, inject } from '@angular/core';
 import { NotificationSound, NotificationSoundService } from 'core-app/features/in-app-notifications/bell/state/notification-sound.service';
 import { populateInputsFromDataset } from 'core-app/shared/components/dataset-inputs';
 
@@ -30,6 +30,7 @@ import { populateInputsFromDataset } from 'core-app/shared/components/dataset-in
 })
 export class NotificationSoundPreviewComponent {
   readonly notificationSound = inject(NotificationSoundService);
+  readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
   @Input() sound:NotificationSound = 'chime';
   @Input() label = '';
