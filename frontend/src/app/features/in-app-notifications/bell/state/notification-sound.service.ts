@@ -49,21 +49,29 @@ export class NotificationSoundService {
 
   private playSound(sound:NotificationSound):void {
     const context = this.context ||= new AudioContext();
-    const now = context.currentTime;
-    const frequencies = sound === 'double_chime' ? [740, 988] : sound === 'soft' ? [523] : [659, 880];
+    const scheduleSound = () => {
+      const now = context.currentTime;
+      const frequencies = sound === 'double_chime' ? [740, 988] : sound === 'soft' ? [523] : [659, 880];
 
-    frequencies.forEach((frequency, index) => {
-      const oscillator = context.createOscillator();
-      const gain = context.createGain();
-      const start = now + index * 0.14;
+      frequencies.forEach((frequency, index) => {
+        const oscillator = context.createOscillator();
+        const gain = context.createGain();
+        const start = now + index * 0.14;
 
-      oscillator.frequency.value = frequency;
-      oscillator.type = 'sine';
-      gain.gain.setValueAtTime(sound === 'soft' ? 0.035 : 0.07, start);
-      gain.gain.exponentialRampToValueAtTime(0.001, start + 0.22);
-      oscillator.connect(gain).connect(context.destination);
-      oscillator.start(start);
-      oscillator.stop(start + 0.23);
-    });
+        oscillator.frequency.value = frequency;
+        oscillator.type = 'sine';
+        gain.gain.setValueAtTime(sound === 'soft' ? 0.035 : 0.07, start);
+        gain.gain.exponentialRampToValueAtTime(0.001, start + 0.22);
+        oscillator.connect(gain).connect(context.destination);
+        oscillator.start(start);
+        oscillator.stop(start + 0.23);
+      });
+    };
+
+    if (context.state === 'suspended') {
+      void context.resume().then(scheduleSound).catch(() => undefined);
+    } else {
+      scheduleSound();
+    }
   }
 }
