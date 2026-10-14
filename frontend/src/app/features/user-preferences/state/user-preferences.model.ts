@@ -41,6 +41,10 @@ export interface ImmediateRemindersSettings {
   mentioned:boolean;
   personalReminder:boolean;
 }
+export interface NotificationSoundSettings {
+  enabled:boolean;
+  sound:'chime'|'doubleChime'|'soft';
+}
 
 export interface IUserPreference {
   autoHidePopups:boolean;
@@ -53,4 +57,5 @@ export interface IUserPreference {
   dailyReminders:DailyRemindersSettings;
   immediateReminders:ImmediateRemindersSettings;
   pauseReminders:Partial<PauseRemindersSettings>;
+  notificationSound:NotificationSoundSettings;
 }
