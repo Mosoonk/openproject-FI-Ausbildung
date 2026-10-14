@@ -26,7 +26,7 @@ export type NotificationSound = 'chime'|'double_chime'|'soft';
 export class NotificationSoundService {
   private enabled = false;
   private sound:NotificationSound = 'chime';
-  private context?:AudioContext;
+  private readonly audio = new Map<NotificationSound, HTMLAudioElement>();
   private lastPlayedAt = 0;
 
   configure(enabled:boolean, sound:NotificationSound):void {
@@ -48,30 +48,24 @@ export class NotificationSoundService {
   }
 
   private playSound(sound:NotificationSound):void {
-    const context = this.context ||= new AudioContext();
-    const scheduleSound = () => {
-      const now = context.currentTime;
-      const frequencies = sound === 'double_chime' ? [740, 988] : sound === 'soft' ? [523] : [659, 880];
+    const audio = this.audio.get(sound) || this.createAudio(sound);
+    audio.pause();
+    audio.currentTime = 0;
+    void audio.play().catch(() => undefined);
+  }
 
-      frequencies.forEach((frequency, index) => {
-        const oscillator = context.createOscillator();
-        const gain = context.createGain();
-        const start = now + index * 0.14;
+  private createAudio(sound:NotificationSound):HTMLAudioElement {
+    const filename = {
+      chime: 'notification-1.mp3',
+      double_chime: 'notification-2.mp3',
+      soft: 'message-ping.mp3',
+    }[sound];
+    const audio = new Audio(`/assets/frontend/assets/sounds/${filename}`);
 
-        oscillator.frequency.value = frequency;
-        oscillator.type = 'sine';
-        gain.gain.setValueAtTime(sound === 'soft' ? 0.035 : 0.07, start);
-        gain.gain.exponentialRampToValueAtTime(0.001, start + 0.22);
-        oscillator.connect(gain).connect(context.destination);
-        oscillator.start(start);
-        oscillator.stop(start + 0.23);
-      });
-    };
+    audio.preload = 'auto';
+    audio.volume = 0.65;
+    this.audio.set(sound, audio);
 
-    if (context.state === 'suspended') {
-      void context.resume().then(scheduleSound).catch(() => undefined);
-    } else {
-      scheduleSound();
-    }
+    return audio;
   }
 }
