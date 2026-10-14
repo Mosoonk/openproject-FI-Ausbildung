@@ -25,7 +25,11 @@ import { populateInputsFromDataset } from 'core-app/shared/components/dataset-in
 @Component({
   selector: 'opce-notification-sound-preview',
   template: '<button class="Button Button--secondary" type="button" (click)="play()">{{ label }}</button>',
-  styles: [':host { display: block; margin-top: 12px; }'],
+  styles: [`
+    :host
+      display: block
+      margin-top: 12px
+  `],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
