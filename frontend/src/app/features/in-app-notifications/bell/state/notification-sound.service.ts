@@ -43,6 +43,10 @@ export class NotificationSoundService {
     this.playSound(this.sound);
   }
 
+  preview(sound:NotificationSound):void {
+    this.playSound(sound);
+  }
+
   private playSound(sound:NotificationSound):void {
     const context = this.context ||= new AudioContext();
     const now = context.currentTime;

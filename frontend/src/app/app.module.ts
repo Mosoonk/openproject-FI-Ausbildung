@@ -159,6 +159,9 @@ import {
   InAppNotificationBellComponent,
 } from 'core-app/features/in-app-notifications/bell/in-app-notification-bell.component';
 import {
+  NotificationSoundPreviewComponent,
+} from 'core-app/features/in-app-notifications/bell/notification-sound-preview.component';
+import {
   EditableQueryPropsComponent,
 } from 'core-app/features/admin/editable-query-props/editable-query-props.component';
 import {
@@ -400,6 +403,7 @@ export class OpenProjectModule implements DoBootstrap {
     registerCustomElement('opce-spot-switch', SpotSwitchComponent, { injector });
     registerCustomElement('opce-modal-overlay', OpModalOverlayComponent, { injector });
     registerCustomElement('opce-in-app-notification-bell', InAppNotificationBellComponent, { injector });
+    registerCustomElement('opce-notification-sound-preview', NotificationSoundPreviewComponent, { injector });
     registerCustomElement('opce-editable-query-props', EditableQueryPropsComponent, { injector });
     registerCustomElement('opce-time-entry-trigger-actions', TriggerActionsEntryComponent, { injector });
     registerCustomElement('opce-wp-overview-graph', WorkPackageOverviewGraphComponent, { injector });
