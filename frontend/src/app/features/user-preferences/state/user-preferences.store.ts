@@ -49,6 +49,10 @@ function createInitialState():IUserPreference {
       mentioned: false,
       personalReminder: false,
     },
+    notificationSound: {
+      enabled: false,
+      sound: 'chime',
+    },
     pauseReminders: {
       enabled: false,
     },
