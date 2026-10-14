@@ -35,6 +35,7 @@ const titlePartsSeparator = ' | ';
 @Injectable({ providedIn: 'root' })
 export class OpTitleService {
   private titleService = inject(Title);
+  private notificationCount = 0;
 
 
   public get current():string {
@@ -46,7 +47,7 @@ export class OpTitleService {
   }
 
   public get titleParts():string[] {
-    return this.current.split(titlePartsSeparator);
+    return this.titleWithoutNotificationCount.split(titlePartsSeparator);
   }
 
   public get appTitle():string {
@@ -54,13 +55,27 @@ export class OpTitleService {
   }
 
   public setFirstPart(value:string) {
-    if (this.current.includes(this.base) && this.current.includes(titlePartsSeparator)) {
+    if (this.titleWithoutNotificationCount.includes(this.base) && this.titleWithoutNotificationCount.includes(titlePartsSeparator)) {
       const parts = this.titleParts;
       parts[0] = value;
-      this.titleService.setTitle(parts.join(titlePartsSeparator));
+      this.setTitle(parts.join(titlePartsSeparator));
     } else {
       const newTitle = [value, this.base].join(titlePartsSeparator);
-      this.titleService.setTitle(newTitle);
+      this.setTitle(newTitle);
     }
+  }
+
+  public setNotificationCount(count:number):void {
+    this.notificationCount = Math.max(0, count);
+    this.setTitle(this.titleWithoutNotificationCount);
+  }
+
+  private get titleWithoutNotificationCount():string {
+    return this.current.replace(/^\(\d+\)\s+/, '');
+  }
+
+  private setTitle(title:string):void {
+    const prefix = this.notificationCount > 0 ? `(${this.notificationCount}) ` : '';
+    this.titleService.setTitle(`${prefix}${title}`);
   }
 }
