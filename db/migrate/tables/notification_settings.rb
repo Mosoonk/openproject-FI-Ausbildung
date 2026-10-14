@@ -49,6 +49,7 @@ class Tables::NotificationSettings < Tables::Base
       t.boolean :work_package_processed, default: false, index: true # rubocop:disable Rails/ThreeStateBooleanColumn
       t.boolean :work_package_prioritized, default: false, index: true # rubocop:disable Rails/ThreeStateBooleanColumn
       t.boolean :work_package_scheduled, default: false, index: true # rubocop:disable Rails/ThreeStateBooleanColumn
+      t.boolean :daily_report, default: false, index: true # rubocop:disable Rails/ThreeStateBooleanColumn
       t.boolean :news_added, default: false, index: true # rubocop:disable Rails/ThreeStateBooleanColumn
       t.boolean :news_commented, default: false, index: true # rubocop:disable Rails/ThreeStateBooleanColumn
       t.boolean :document_added, default: false, index: true # rubocop:disable Rails/ThreeStateBooleanColumn

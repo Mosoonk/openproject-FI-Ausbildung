@@ -55,4 +55,34 @@ RSpec.describe DailyReport::NotifyWatchersService, type: :model do
       described_class.new.call(entry:, actor:, event: "created")
     end.not_to change(Notification, :count)
   end
+
+  it "notifies a user who enabled Daily Reports for all projects" do
+    subscriber = create(:user, member_with_permissions: { project => %i[view_work_packages] })
+    create(:notification_setting, user: subscriber, daily_report: true)
+
+    described_class.new.call(entry:, actor:, event: "created")
+
+    expect(Notification.where(recipient: subscriber)).to contain_exactly(
+      have_attributes(actor:, resource: work_package, reason: "daily_report")
+    )
+  end
+
+  it "respects a project-specific opt-out for Daily Reports" do
+    subscriber = create(:user, member_with_permissions: { project => %i[view_work_packages] })
+    create(:notification_setting, user: subscriber, daily_report: true)
+    create(:notification_setting, user: subscriber, project:, daily_report: false)
+
+    described_class.new.call(entry:, actor:, event: "created")
+
+    expect(Notification.where(recipient: subscriber)).to be_empty
+  end
+
+  it "does not notify a globally subscribed user who cannot view the Work Package" do
+    subscriber = create(:user)
+    create(:notification_setting, user: subscriber, daily_report: true)
+
+    described_class.new.call(entry:, actor:, event: "created")
+
+    expect(Notification.where(recipient: subscriber)).to be_empty
+  end
 end

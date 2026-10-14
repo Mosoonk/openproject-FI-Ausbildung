@@ -22,7 +22,8 @@ RSpec.shared_examples "notification settings workflow" do
                                      work_package_created: true,
                                      work_package_processed: true,
                                      work_package_prioritized: true,
-                                     work_package_scheduled: true
+                                     work_package_scheduled: true,
+                                     daily_report: true
       settings_page.save_non_participating
 
       # Set settings for global date alerts
@@ -41,7 +42,8 @@ RSpec.shared_examples "notification settings workflow" do
                                       work_package_created: false,
                                       work_package_processed: false,
                                       work_package_prioritized: false,
-                                      work_package_scheduled: false
+                                      work_package_scheduled: false,
+                                      daily_report: false
 
       # Set settings for project date alerts
       settings_page.set_project_reminder("start_date", "3 days before")
@@ -66,6 +68,7 @@ RSpec.shared_examples "notification settings workflow" do
       expect(global_settings.work_package_processed).to be_truthy
       expect(global_settings.work_package_prioritized).to be_truthy
       expect(global_settings.work_package_scheduled).to be_truthy
+      expect(global_settings.daily_report).to be_truthy
       expect(global_settings.start_date).to eq(3)
       expect(global_settings.due_date).to eq(1)
       expect(global_settings.overdue).to eq(7)
@@ -81,6 +84,7 @@ RSpec.shared_examples "notification settings workflow" do
       expect(project_settings.work_package_processed).to be_falsey
       expect(project_settings.work_package_prioritized).to be_falsey
       expect(project_settings.work_package_scheduled).to be_falsey
+      expect(project_settings.daily_report).to be_falsey
       expect(project_settings.start_date).to eq(3)
       expect(project_settings.due_date).to eq(3)
       expect(project_settings.overdue).to eq(7)

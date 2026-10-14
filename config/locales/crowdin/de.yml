@@ -4659,6 +4659,7 @@ de:
         work_package_prioritized: Alle Prioritätsänderungen
         work_package_processed: Alle Statusänderungen
         work_package_scheduled: Alle Datumsänderungen
+        daily_report: Daily Reports
       participating:
         assignee: Zugewiesen
         description: Sie erhalten stets eine Benachrichtigung, wenn Sie erwähnt werden sowie bei Änderungen an Arbeitspaketen, die Sie beobachten. Diese Benachrichtigungen können nicht deaktiviert werden. Sie können jedoch festlegen, ob Sie Benachrichtigungen über Änderungen an Arbeitspaketen erhalten möchten, die Sie betreffen (bei denen Sie als Verantwortlich oder Zugewiesen eingetragen sind oder das Arbeitspaket für Sie freigegeben wurden).

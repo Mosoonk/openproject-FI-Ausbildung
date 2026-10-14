@@ -18,6 +18,12 @@ OpenProject's own 17.9.1 changes, including its routes, notification menu,
 permissions, locale updates, dependency locks and Hocuspocus image version,
 come from the exact upstream tag.
 
+Users can enable or disable `Daily Reports` in **Account settings →
+Notification and email → Non-participating**. When enabled, they receive an
+in-app notification for each Daily Report created or corrected in every
+project where they can view the Work Package. This preference is independent
+of Watchers and supports the standard project-specific override.
+
 The image workflow now builds on pushes to this upgrade branch and identifies
 the image as based on OpenProject 17.9.1. A manually selected release tag can
 be `17.9.1-dr.1` after the branch's checks have passed.
