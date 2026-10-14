@@ -43,6 +43,7 @@ RSpec.describe My::Notifications::ShowPageComponent, type: :component do
           global_notification_setting: global_setting,
           update_participating_url: { action: "update_participating" },
           update_non_participating_url: { action: "update_non_participating" },
+          update_sound_url: { action: "update_settings" },
           update_date_alerts_url: { action: "update_date_alerts" },
           new_project_settings_url: "/my/project_notifications/new",
           edit_project_settings_url: ->(project_id) { "/my/project_notifications/#{project_id}/edit" },
@@ -50,6 +51,17 @@ RSpec.describe My::Notifications::ShowPageComponent, type: :component do
         )
       )
     end
+  end
+
+  it "renders notification sound settings and preview", :aggregate_failures do
+    expect(rendered_component).to have_field("pref[notification_sound][enabled]")
+    expect(rendered_component).to have_select(
+      "pref[notification_sound][sound]",
+      options: ["Notification 1", "Notification 2", "Message ping"]
+    )
+    expect(rendered_component).to have_css(
+      "opce-notification-sound-preview[data-input-sound='\"chime\"']"
+    )
   end
 
   context "with project-specific settings" do
