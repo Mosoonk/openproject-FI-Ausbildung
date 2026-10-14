@@ -25,6 +25,7 @@ import { populateInputsFromDataset } from 'core-app/shared/components/dataset-in
 @Component({
   selector: 'opce-notification-sound-preview',
   template: '<button class="Button Button--secondary" type="button" (click)="play()">{{ label }}</button>',
+  styles: [':host { display: block; margin-top: 12px; }'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
@@ -40,6 +41,11 @@ export class NotificationSoundPreviewComponent {
   }
 
   play():void {
-    this.notificationSound.preview(this.sound);
+    const selectedSound = document.querySelector<HTMLSelectElement>('select[name="pref[notification_sound][sound]"]')?.value;
+    this.notificationSound.preview(this.isSound(selectedSound) ? selectedSound : this.sound);
+  }
+
+  private isSound(value:string|undefined):value is NotificationSound {
+    return value === 'chime' || value === 'double_chime' || value === 'soft';
   }
 }
