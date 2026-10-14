@@ -4636,9 +4636,9 @@ de:
         submit: Benachrichtigungston aktualisieren
         preview: Ton testen
         options:
-          chime: Klang
-          double_chime: Doppelter Klang
-          soft: Leiser Klang
+          chime: Benachrichtigung 1
+          double_chime: Benachrichtigung 2
+          soft: Nachrichten-Ping
       date_alerts:
         description: Sie können Terminbenachrichtigungen für Arbeitspakete einrichten, bei denen Sie verantwortlich oder zugewiesen oder als Beobachter eingetragen sind, um einige Tage vor bevorstehenden oder bereits überschrittenen Terminen automatisch benachrichtigt zu werden.
         due_date: Endtermin
