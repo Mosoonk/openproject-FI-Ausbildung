@@ -41,11 +41,15 @@ if [ -f config/database.yml ]; then
   exit 1
 fi
 
-if command -v docker-compose &> /dev/null
+if docker compose version &> /dev/null
+then
+  DOCKER_COMPOSE="docker compose"
+elif command -v docker-compose &> /dev/null
 then
   DOCKER_COMPOSE="docker-compose"
 else
-  DOCKER_COMPOSE="docker compose"
+  echo "Docker Compose v2 or docker-compose is required."
+  exit 1
 fi
 
 if [[ "$@" = "start" ]]; then
