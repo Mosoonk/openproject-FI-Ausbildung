@@ -58,7 +58,7 @@ RSpec.describe DailyReport::NotifyWatchersService, type: :model do
 
   it "notifies a user who enabled Daily Reports for all projects" do
     subscriber = create(:user, member_with_permissions: { project => %i[view_work_packages] })
-    create(:notification_setting, user: subscriber, daily_report: true)
+    enable_daily_reports(subscriber)
 
     described_class.new.call(entry:, actor:, event: "created")
 
@@ -69,7 +69,7 @@ RSpec.describe DailyReport::NotifyWatchersService, type: :model do
 
   it "combines watcher and Daily Report subscribers" do
     subscriber = create(:user, member_with_permissions: { project => %i[view_work_packages] })
-    create(:notification_setting, user: subscriber, daily_report: true)
+    enable_daily_reports(subscriber)
 
     described_class.new.call(entry:, actor:, event: "created")
 
@@ -79,7 +79,7 @@ RSpec.describe DailyReport::NotifyWatchersService, type: :model do
 
   it "respects a project-specific opt-out for Daily Reports" do
     subscriber = create(:user, member_with_permissions: { project => %i[view_work_packages] })
-    create(:notification_setting, user: subscriber, daily_report: true)
+    enable_daily_reports(subscriber)
     create(:notification_setting, user: subscriber, project:, daily_report: false)
 
     described_class.new.call(entry:, actor:, event: "created")
@@ -89,10 +89,14 @@ RSpec.describe DailyReport::NotifyWatchersService, type: :model do
 
   it "does not notify a globally subscribed user who cannot view the Work Package" do
     subscriber = create(:user)
-    create(:notification_setting, user: subscriber, daily_report: true)
+    enable_daily_reports(subscriber)
 
     described_class.new.call(entry:, actor:, event: "created")
 
     expect(Notification.where(recipient: subscriber)).to be_empty
+  end
+
+  def enable_daily_reports(user)
+    user.notification_settings.find_by!(project: nil).update!(daily_report: true)
   end
 end
