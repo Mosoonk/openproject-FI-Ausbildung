@@ -1210,6 +1210,7 @@ Rails.application.routes.draw do
       post :change_status
       post :resend_invitation
       patch :update_reminders
+      patch :update_notification_sound
       patch :update_workdays
       patch :update_email_alerts
       patch :update_participating

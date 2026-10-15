@@ -43,6 +43,7 @@ class UsersController < ApplicationController
                                      edit
                                      update
                                      update_reminders
+                                     update_notification_sound
                                      update_workdays
                                      update_email_alerts
                                      update_participating
@@ -142,6 +143,12 @@ class UsersController < ApplicationController
     call = ::Users::UpdateService.new(model: @user, user: current_user).call(pref: permitted_params.pref.to_h)
     flash[call.success? ? :notice : :error] = update_service_flash_message(call)
     redirect_back_or_to edit_user_path(@user, tab: "reminders")
+  end
+
+  def update_notification_sound
+    call = ::Users::UpdateService.new(model: @user, user: current_user).call(pref: permitted_params.pref.to_h)
+    flash[call.success? ? :notice :error] = update_service_flash_message(call)
+    redirect_back_or_to edit_user_path(@user, tab: "notifications")
   end
 
   def update_participating

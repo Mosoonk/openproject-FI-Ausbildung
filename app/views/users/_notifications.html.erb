@@ -33,6 +33,7 @@ See COPYRIGHT and LICENSE files for more details.
         update_participating_url: update_participating_user_path(@user),
         update_non_participating_url: update_non_participating_user_path(@user),
         update_date_alerts_url: update_date_alerts_user_path(@user),
+        update_sound_url: update_notification_sound_user_path(@user),
         new_project_settings_url: new_project_settings_user_path(@user),
         edit_project_settings_url: ->(project_id) { edit_project_settings_user_path(@user, project_id:) },
         project_setting_url: ->(project_id) { project_setting_user_path(@user, project_id:) }
