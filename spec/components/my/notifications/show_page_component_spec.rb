@@ -60,7 +60,7 @@ RSpec.describe My::Notifications::ShowPageComponent, type: :component do
       options: ["Notification 1", "Notification 2", "Message ping"]
     )
     expect(rendered_component).to have_css(
-      "opce-notification-sound-preview[data-input-sound='\"chime\"']"
+      "opce-notification-sound-preview[data-sound='\"chime\"']"
     )
   end
 
