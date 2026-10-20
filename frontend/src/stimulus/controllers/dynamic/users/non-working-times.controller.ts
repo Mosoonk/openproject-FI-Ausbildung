@@ -40,7 +40,7 @@ interface NonWorkingDayEvent {
   start?:string;
   end?:string;
   title:string;
-  type:'global' | 'user';
+  type:string;
   workingDays?:number;
   edit_url?:string;
 }
@@ -156,7 +156,7 @@ export default class NonWorkingTimesController extends Controller {
         end: event.end,
         title: event.title,
         extendedProps: { workingDays: event.workingDays, editUrl: event.edit_url },
-        classNames: ['non-working-day--user'],
+        classNames: ['non-working-day--user', `daily-report-unavailability--${event.type}`],
         allDay: true,
       };
     });

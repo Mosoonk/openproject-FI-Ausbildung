@@ -35,7 +35,12 @@ module WorkPackages
 
       # Returns the right day computation instance for the given instance.
       def for(work_package)
-        work_package.ignore_non_working_days ? AllDays.new : WorkingDays.new
+        return AllDays.new if work_package.ignore_non_working_days
+
+        unavailabilities = DailyReport::WorkPackageAvailability.unavailabilities_for(work_package)
+        return WorkingDays.new if unavailabilities.empty?
+
+        DailyReport::PersonalWorkingDays.new(unavailabilities:)
       end
     end
   end

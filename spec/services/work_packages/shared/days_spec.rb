@@ -49,5 +49,51 @@ RSpec.describe WorkPackages::Shared::Days do
         expect(described_class.for(work_package)).to be_an_instance_of(WorkPackages::Shared::WorkingDays)
       end
     end
+
+    context "for a directly assigned Daily Report participant" do
+      let(:project) { create(:project) }
+      let(:participant) { create(:user, member_with_permissions: { project => %i[view_work_packages] }) }
+      let(:work_package) { create(:work_package, project:, assigned_to: participant, ignore_non_working_days: false) }
+
+      before do
+        create(
+          :daily_report_user_unavailability,
+          :berufsschule,
+          user: participant,
+          start_date: Date.new(2026, 10, 1),
+          end_date: Date.new(2026, 10, 31),
+          weekdays: [3]
+        )
+      end
+
+      it "excludes the participant's selected absence days" do
+        days = described_class.for(work_package)
+
+        expect(days).to be_a(DailyReport::PersonalWorkingDays)
+        expect(days.working?(Date.new(2026, 10, 14))).to be(false)
+        expect(days.working?(Date.new(2026, 10, 15))).to be(true)
+      end
+
+      it "uses all absence kinds by default" do
+        create(
+          :daily_report_user_unavailability,
+          user: participant,
+          kind: "krank",
+          start_date: Date.new(2026, 10, 15),
+          end_date: Date.new(2026, 10, 15)
+        )
+
+        expect(described_class.for(work_package).working?(Date.new(2026, 10, 15))).to be(false)
+      end
+
+      it "can exclude an absence kind for this work package" do
+        DailyReport::WorkPackageScheduleSetting.create!(
+          work_package:,
+          excluded_unavailability_kinds: ["berufsschule"]
+        )
+
+        expect(described_class.for(work_package).working?(Date.new(2026, 10, 14))).to be(true)
+      end
+    end
   end
 end

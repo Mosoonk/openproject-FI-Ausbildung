@@ -100,6 +100,7 @@ class WorkPackages::DatePickerController < ApplicationController
                      .call(wp_params)
 
     if service_call.success?
+      update_daily_report_schedule_setting
       head :ok
     else
       render_form(status: :unprocessable_entity)
@@ -208,6 +209,16 @@ class WorkPackages::DatePickerController < ApplicationController
 
   def allowed_params
     %i[schedule_manually ignore_non_working_days start_date due_date duration]
+  end
+
+  def update_daily_report_schedule_setting
+    return unless DailyReport::WorkPackageAvailability.applicable?(@work_package)
+    return unless params.key?(:daily_report_schedule_setting)
+
+    included_kinds = Array(params.expect(daily_report_schedule_setting: [included_kinds: []])[:included_kinds])
+    excluded_kinds = DailyReport::UserUnavailability::KINDS - included_kinds
+    setting = @work_package.daily_report_schedule_setting || @work_package.build_daily_report_schedule_setting
+    setting.update!(excluded_unavailability_kinds: excluded_kinds)
   end
 
   def touched?(field)

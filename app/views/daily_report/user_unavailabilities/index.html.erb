@@ -1,0 +1,104 @@
+<% html_title(t("daily_report.availability.title")) %>
+
+<%= render(Primer::Beta::Heading.new(tag: :h2, mb: 3)) { t("daily_report.availability.title") } %>
+
+<%
+  participant_options = @participants.map { |user| [user.name, user.id] }
+  user_custom_field_options = @user_custom_fields.map { |custom_field| [custom_field.name, custom_field.id] }
+  kind_options = DailyReport::UserUnavailability::KINDS.map do |kind|
+    [I18n.t("daily_report.availability.kinds.#{kind}"), kind]
+  end
+  weekday_options = (1..7).map do |weekday|
+    [weekday, I18n.t("date.day_names")[weekday % 7]]
+  end
+%>
+
+<%= primer_form_with(url: daily_report_user_unavailabilities_path) do |form| %>
+  <%= render_inline_form(form) do |f|
+        f.select_list(
+          name: "daily_report_user_unavailability[user_id]",
+          label: I18n.t("daily_report.availability.participant")
+        ) do |select|
+          participant_options.each do |label, value|
+            select.option(label:, value:)
+          end
+        end
+        f.select_list(
+          name: "daily_report_user_unavailability[kind]",
+          label: I18n.t("daily_report.availability.kind")
+        ) do |select|
+          kind_options.each do |label, value|
+            select.option(label:, value:)
+          end
+        end
+        f.single_date_picker(name: "daily_report_user_unavailability[start_date]", label: I18n.t("daily_report.availability.start_date"), required: true)
+        f.single_date_picker(name: "daily_report_user_unavailability[end_date]", label: I18n.t("daily_report.availability.end_date"), required: true)
+        f.check_box_group(name: "daily_report_user_unavailability[weekdays]", label: I18n.t("daily_report.availability.weekdays"), include_hidden: true) do |group|
+          weekday_options.each do |weekday, label|
+            group.check_box(value: weekday, label:)
+          end
+        end
+        f.submit(name: :submit, label: I18n.t("daily_report.availability.add"), scheme: :primary)
+      end %>
+<% end %>
+
+<%= render(Primer::Beta::Heading.new(tag: :h3, mb: 2)) { t("daily_report.availability.matching_users") } %>
+
+<%= primer_form_with(url: create_by_custom_field_daily_report_user_unavailabilities_path) do |form| %>
+  <%= render_inline_form(form) do |f|
+        f.select_list(
+          name: "daily_report_user_unavailability[user_custom_field_id]",
+          label: I18n.t("daily_report.availability.custom_field")
+        ) do |select|
+          user_custom_field_options.each do |label, value|
+            select.option(label:, value:)
+          end
+        end
+        f.text_field(
+          name: "daily_report_user_unavailability[custom_field_value]",
+          label: I18n.t("daily_report.availability.custom_field_value"),
+          caption: I18n.t("daily_report.availability.custom_field_value_caption"),
+          required: true
+        )
+        f.select_list(
+          name: "daily_report_user_unavailability[kind]",
+          label: I18n.t("daily_report.availability.kind")
+        ) do |select|
+          kind_options.each do |label, value|
+            select.option(label:, value:)
+          end
+        end
+        f.single_date_picker(name: "daily_report_user_unavailability[start_date]", label: I18n.t("daily_report.availability.start_date"), required: true)
+        f.single_date_picker(name: "daily_report_user_unavailability[end_date]", label: I18n.t("daily_report.availability.end_date"), required: true)
+        f.check_box_group(name: "daily_report_user_unavailability[weekdays]", label: I18n.t("daily_report.availability.weekdays"), include_hidden: true) do |group|
+          weekday_options.each do |weekday, label|
+            group.check_box(value: weekday, label:)
+          end
+        end
+        f.submit(name: :submit, label: I18n.t("daily_report.availability.add_for_users"), scheme: :primary)
+      end %>
+<% end %>
+
+<%= render(DailyReport::AvailabilityCalendarComponent.new(year: @year, unavailabilities: @unavailabilities)) %>
+
+<%= render(Primer::Beta::BorderBox.new(mt: 3)) do |box| %>
+  <% @unavailabilities.each do |unavailability| %>
+    <% box.with_row do %>
+      <%= render(Primer::OpenProject::FlexLayout.new(justify_content: :space_between, align_items: :center)) do |row| %>
+        <% row.with_column do %>
+          <%= "#{unavailability.user.name} · #{t("daily_report.availability.kinds.#{unavailability.kind}")} · #{l(unavailability.start_date)} – #{l(unavailability.end_date)}" %>
+        <% end %>
+        <% row.with_column do %>
+          <%= render(
+                Primer::Beta::Button.new(
+                  scheme: :danger,
+                  tag: :a,
+                  href: daily_report_user_unavailability_path(unavailability),
+                  data: { turbo_method: :delete, turbo_confirm: t(:text_are_you_sure) }
+                )
+              ) { t(:button_delete) } %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>

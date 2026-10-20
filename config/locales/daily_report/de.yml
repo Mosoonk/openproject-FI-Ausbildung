@@ -9,6 +9,31 @@ de:
     comment: "Kommentar"
     author_user: "Autor"
     updated_by_user: "Bearbeitet von"
+  daily_report:
+    availability:
+      types_label: "Abwesenheiten von Teilnehmenden"
+      types_caption: "Ausgewaehlte Abwesenheiten bei Arbeitstagen beruecksichtigen."
+      kinds:
+        berufsschule: "Berufsschule"
+        urlaub: "Urlaub"
+        krank: "Krank"
+      title: "Kalender der Teilnehmenden"
+      participant: "Teilnehmende"
+      kind: "Abwesenheitsart"
+      start_date: "Startdatum"
+      end_date: "Enddatum"
+      weekdays: "Wochentage fuer Berufsschule"
+      add: "Abwesenheit hinzufuegen"
+      add_for_users: "Fuer passende Teilnehmende hinzufuegen"
+      custom_field: "Benutzerattribut"
+      custom_field_value: "Wert"
+      custom_field_value_caption: "Zum Beispiel: LJ_1"
+      matching_users: "Fuer alle Teilnehmenden mit passendem Benutzerattribut hinzufuegen"
+      created: "Abwesenheit wurde hinzugefuegt."
+      created_for_users:
+        one: "Abwesenheit wurde fuer eine Person hinzugefuegt."
+        other: "Abwesenheit wurde fuer %{count} Personen hinzugefuegt."
+      deleted: "Abwesenheit wurde geloescht."
   activerecord:
     attributes:
       daily_report/work_package_entry:
@@ -21,6 +46,16 @@ de:
         comment: "Kommentar"
         author_user: "Autor"
         updated_by_user: "Bearbeitet von"
+      daily_report/user_unavailability:
+        user: "Teilnehmende"
+        kind: "Abwesenheitsart"
+        start_date: "Startdatum"
+        end_date: "Enddatum"
+        weekdays: "Wochentage"
+        created_by_user: "Erstellt von"
+        updated_by_user: "Bearbeitet von"
+      daily_report/work_package_schedule_setting:
+        excluded_unavailability_kinds: "Nicht beruecksichtigte Abwesenheitsarten"
     errors:
       models:
         daily_report/work_package_entry:

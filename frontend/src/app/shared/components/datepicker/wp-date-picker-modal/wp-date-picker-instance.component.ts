@@ -44,6 +44,13 @@ import { filter } from 'rxjs/operators';
 
 export type DateMode = 'single'|'range';
 
+interface PersonalUnavailability {
+  kind:string;
+  startDate:string;
+  endDate:string;
+  weekdays:number[];
+}
+
 @Component({
   selector: 'op-wp-date-picker-instance',
   template: `
@@ -74,6 +81,7 @@ export class OpWpDatePickerInstanceComponent extends UntilDestroyedMixin impleme
   @Input() public isSchedulable = true;
   @Input() public dateMode:DateMode;
   @Input() public minDate:string|null;
+  @Input() public personalUnavailabilities:PersonalUnavailability[] = [];
 
   @Input() startDateFieldId:string;
   @Input() dueDateFieldId:string;
@@ -235,14 +243,27 @@ export class OpWpDatePickerInstanceComponent extends UntilDestroyedMixin impleme
       onChange: this.onFlatpickrChange.bind(this),
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
       onDayCreate: async (dObj:Date[], dStr:string, fp:flatpickr.Instance, dayElem:DayElement) => {
+        const personalUnavailability = this.personalUnavailabilityOn(dayElem.dateObj);
+        const isNonWorkingDay = Boolean(personalUnavailability)
+          || Boolean(await this.datePickerInstance?.isNonWorkingDay(dayElem.dateObj));
+
         onDayCreate(
           dayElem,
           this.ignoreNonWorkingDays,
-          await this.datePickerInstance?.isNonWorkingDay(dayElem.dateObj),
-          this.isDayDisabled(dayElem),
+          isNonWorkingDay,
+          this.isDayDisabled(dayElem) || this.isPersonalUnavailabilityDisabled(personalUnavailability),
         );
+
+        if (personalUnavailability) {
+          dayElem.classList.add(`daily-report-unavailability--${personalUnavailability.kind}`);
+          dayElem.setAttribute('title', this.personalUnavailabilityLabel(personalUnavailability));
+          dayElem.setAttribute('aria-label', `${dayElem.getAttribute('aria-label') ?? ''} ${this.personalUnavailabilityLabel(personalUnavailability)}`.trim());
+        }
       },
       minDate: this.minDate,
+      disable: [
+        (date:Date) => this.isPersonalUnavailabilityDisabled(this.personalUnavailabilityOn(date)),
+      ],
     } as flatpickr.Options.Options;
 
     return omitBy(options, (v) => v == null);
@@ -263,6 +284,32 @@ export class OpWpDatePickerInstanceComponent extends UntilDestroyedMixin impleme
       || (!this.scheduleManually
         && !!this.minimalSchedulingDate
         && dayElement.dateObj < this.minimalSchedulingDate);
+  }
+
+  private isPersonalUnavailabilityDisabled(unavailability:PersonalUnavailability|undefined):boolean {
+    return !this.ignoreNonWorkingDays && Boolean(unavailability);
+  }
+
+  private personalUnavailabilityOn(date:Date):PersonalUnavailability|undefined {
+    const isoDate = this.isoDate(date);
+    const weekday = date.getDay() || 7;
+
+    return this.personalUnavailabilities.find((unavailability) => (
+      isoDate >= unavailability.startDate
+      && isoDate <= unavailability.endDate
+      && (unavailability.weekdays.length === 0 || unavailability.weekdays.includes(weekday))
+    ));
+  }
+
+  private personalUnavailabilityLabel(unavailability:PersonalUnavailability):string {
+    return this.I18n.t(`daily_report.availability.kinds.${unavailability.kind}`);
+  }
+
+  private isoDate(date:Date):string {
+    const month = `${date.getMonth() + 1}`.padStart(2, '0');
+    const day = `${date.getDate()}`.padStart(2, '0');
+
+    return `${date.getFullYear()}-${month}-${day}`;
   }
 
   /**

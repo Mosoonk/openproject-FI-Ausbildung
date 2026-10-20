@@ -45,6 +45,12 @@ Rails.application.routes.draw do
 
   get "/api/docs" => "api_docs#index"
 
+  namespace :daily_report do
+  resources :user_unavailabilities, path: "availability", only: %i[index create destroy] do
+    post :create_by_custom_field, on: :collection
+  end
+  end
+
   mount API::Mcp => "/mcp"
 
   # Redirect deprecated issue links to new work packages uris

@@ -69,6 +69,25 @@
       end
 
       if show_date_form
+        if personal_availability_applicable?
+          body.with_row(mb: 3) do
+            render(Primer::Alpha::FormControl.new(label: t("daily_report.availability.types_label"))) do |component|
+              component.with_caption { t("daily_report.availability.types_caption") }
+              component.with_input do
+                render(Primer::Alpha::CheckBoxGroup.new(name: "daily_report_schedule_setting[included_kinds][]")) do |group|
+                  daily_report_availability_kinds.each do |kind|
+                    group.check_box(
+                      label: t("daily_report.availability.kinds.#{kind}"),
+                      value: kind,
+                      checked: daily_report_included_kinds.include?(kind)
+                    )
+                  end
+                end
+              end
+            end
+          end
+        end
+
         body.with_row(mb: 2) do
           render(
             WorkPackages::DatePicker::DateFormComponent.new(
@@ -105,6 +124,7 @@
                                           is_schedulable: !disabled?,
                                           is_milestone: milestone?,
                                           date_mode:,
+                                          personal_unavailabilities: personal_unavailabilities,
                                           start_date_field_id: "work_package_start_date",
                                           due_date_field_id: "work_package_due_date",
                                           duration_field_id: "work_package_duration"

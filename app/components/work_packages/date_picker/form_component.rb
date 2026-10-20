@@ -97,6 +97,29 @@ module WorkPackages
       def disabled_checkbox?
         !schedule_manually && work_package.children.any?
       end
+
+      def personal_availability_applicable?
+        DailyReport::WorkPackageAvailability.applicable?(work_package)
+      end
+
+      def daily_report_availability_kinds
+        DailyReport::UserUnavailability::KINDS
+      end
+
+      def daily_report_included_kinds
+        work_package.daily_report_schedule_setting&.included_unavailability_kinds || daily_report_availability_kinds
+      end
+
+      def personal_unavailabilities
+        DailyReport::WorkPackageAvailability.unavailabilities_for(work_package).map do |unavailability|
+          {
+            kind: unavailability.kind,
+            startDate: unavailability.start_date.iso8601,
+            endDate: unavailability.end_date.iso8601,
+            weekdays: unavailability.weekdays
+          }
+        end
+      end
     end
   end
 end

@@ -59,6 +59,10 @@ class WorkPackage < ApplicationRecord
   belongs_to :status, class_name: "Status"
   belongs_to :author, class_name: "User"
   belongs_to :assigned_to, class_name: "Principal", optional: true
+    has_one :daily_report_schedule_setting,
+            class_name: "DailyReport::WorkPackageScheduleSetting",
+            dependent: :destroy,
+            inverse_of: :work_package
   belongs_to :responsible, class_name: "Principal", optional: true
   belongs_to :project_phase_definition, class_name: "Project::PhaseDefinition", optional: true
   belongs_to :priority, class_name: "IssuePriority"

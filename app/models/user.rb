@@ -85,6 +85,10 @@ class User < Principal
   has_many :non_working_times, class_name: "UserNonWorkingTime",
                                dependent: :destroy,
                                inverse_of: :user
+    has_many :daily_report_unavailabilities,
+             class_name: "DailyReport::UserUnavailability",
+             dependent: :restrict_with_exception,
+             inverse_of: :user
 
   # The user might have one invitation token
   has_one :invitation_token, class_name: "::Token::Invitation", dependent: :destroy

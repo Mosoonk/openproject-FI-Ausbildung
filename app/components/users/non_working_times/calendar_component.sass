@@ -11,6 +11,9 @@
 .users-non-working-times-calendar-view
   height: 100%
 
+.daily-report-availability-calendar
+  min-height: 900px
+
   .op-fc-wrapper
     flex-grow: 1
 
@@ -34,6 +37,18 @@
       color: var(--fgColor-onEmphasis) !important
       border-radius: var(--borderRadius-medium) !important
       cursor: pointer !important
+
+    .fc-event.daily-report-unavailability--berufsschule
+      background-color: var(--data-blue-color-emphasis) !important
+      border-color: var(--data-blue-color-emphasis) !important
+
+    .fc-event.daily-report-unavailability--urlaub
+      background-color: var(--data-green-color-emphasis) !important
+      border-color: var(--data-green-color-emphasis) !important
+
+    .fc-event.daily-report-unavailability--krank
+      background-color: var(--data-red-color-emphasis) !important
+      border-color: var(--data-red-color-emphasis) !important
 
     .fc-multimonth-daygrid-table
       .fc-day
