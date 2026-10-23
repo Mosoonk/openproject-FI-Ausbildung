@@ -58,7 +58,7 @@ export class InAppNotificationBellComponent implements OnInit {
 
   unreadCount$:Observable<number>;
 
-  unreadCountText$:Observable<number|string>;
+  unreadCountText$:Observable<string>;
 
   public bellDisplayLimit = 99;
 
@@ -98,11 +98,11 @@ export class InAppNotificationBellComponent implements OnInit {
       .unreadCount$
       .pipe(
         map((count) => {
-          if (count > this.bellDisplayLimit || count <= 0) {
+          if (count <= 0) {
             return '';
           }
 
-          return count;
+          return count > this.bellDisplayLimit ? `${this.bellDisplayLimit}+` : `${count}`;
         }),
       );
   }

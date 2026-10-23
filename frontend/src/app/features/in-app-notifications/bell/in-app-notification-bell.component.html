@@ -3,7 +3,7 @@
     <span
       [ngClass]="{ 'op-ian-bell--indicator': true, 'op-ian-bell--indicator_max': unreadCount > bellDisplayLimit }"
       data-test-selector="op-ian-notifications-count"
-      [innerHTML]="unreadCountText$ | async"
+      [textContent]="unreadCountText$ | async"
     ></span>
   }
 }
