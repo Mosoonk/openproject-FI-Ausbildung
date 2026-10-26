@@ -2,13 +2,15 @@
 
 <% content_for :content_header do %>
   <%= render(Notifications::IndexPageHeaderComponent.new) %>
-  <%= render(Notifications::IndexSubHeaderComponent.new(
-    facet: params[:facet],
-    filter_name: params[:name],
-    filter_type: params[:filter],
-    page_size: params[:page_size],
-    custom_filters: params[:filters]
-  )) %>
+  <%= render(
+        Notifications::IndexSubHeaderComponent.new(
+          facet: params[:facet],
+          filter_name: params[:name],
+          filter_type: params[:filter],
+          page_size: params[:page_size],
+          custom_filters: params.permit(filters: {}).to_h["filters"]
+        )
+      ) %>
 <% end %>
 
 <% content_for :content_body do %>

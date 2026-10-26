@@ -34,12 +34,18 @@ module Notifications
     no_authorization_required! :show
 
     def show
-      menu = Notifications::Menu.new(params:, current_user:)
+      menu = Notifications::Menu.new(params: menu_params, current_user:)
 
       @sidebar_menu_items = menu.menu_items
       @custom_filter_groups = menu.custom_field_menu_groups
 
       render layout: nil
+    end
+
+    private
+
+    def menu_params
+      params.permit(:filter, :name, name: [], filters: {})
     end
   end
 end

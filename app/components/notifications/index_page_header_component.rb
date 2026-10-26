@@ -80,7 +80,11 @@ module Notifications
       # Instantiating the Notifications::Menu is currently costly as it fires
       # three database queries right away.
       @notifications_menu ||= Notifications::Menu
-                              .new(params:, current_user: User.current)
+                              .new(params: notification_menu_params, current_user: User.current)
+    end
+
+    def notification_menu_params
+      params.permit(:filter, :name, name: [])
     end
   end
 end

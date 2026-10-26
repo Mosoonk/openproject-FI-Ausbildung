@@ -138,7 +138,7 @@ class NotificationsController < ApplicationController
   end
 
   def raw_custom_attribute_filters
-    params.permit(filters: {}).fetch(:filters, {}).to_h
+    params.permit(filters: {}).to_h.fetch("filters", {})
   end
 
   def actor_custom_field_filter?(filter = params[:filter])
