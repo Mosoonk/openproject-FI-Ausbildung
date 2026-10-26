@@ -25,6 +25,10 @@ RSpec.describe DailyReport::NotifyWatchersService, type: :model do
     create(:notification_setting, user: watcher_user, project:, watched: true)
   end
 
+  def set_daily_report_preference(user, value, project: nil)
+    NotificationSetting.find_or_initialize_by(user:, project:).update!(daily_report: value)
+  end
+
   it "creates one in-app notification for an eligible watcher and is idempotent" do
     service = described_class.new
 
@@ -58,7 +62,7 @@ RSpec.describe DailyReport::NotifyWatchersService, type: :model do
 
   it "notifies a user who enabled Daily Reports for all projects" do
     subscriber = create(:user, member_with_permissions: { project => %i[view_work_packages] })
-    create(:notification_setting, user: subscriber, daily_report: true)
+    set_daily_report_preference(subscriber, true)
 
     described_class.new.call(entry:, actor:, event: "created")
 
@@ -69,7 +73,7 @@ RSpec.describe DailyReport::NotifyWatchersService, type: :model do
 
   it "combines watcher and Daily Report subscribers" do
     subscriber = create(:user, member_with_permissions: { project => %i[view_work_packages] })
-    create(:notification_setting, user: subscriber, daily_report: true)
+    set_daily_report_preference(subscriber, true)
 
     described_class.new.call(entry:, actor:, event: "created")
 
@@ -79,8 +83,8 @@ RSpec.describe DailyReport::NotifyWatchersService, type: :model do
 
   it "respects a project-specific opt-out for Daily Reports" do
     subscriber = create(:user, member_with_permissions: { project => %i[view_work_packages] })
-    create(:notification_setting, user: subscriber, daily_report: true)
-    create(:notification_setting, user: subscriber, project:, daily_report: false)
+    set_daily_report_preference(subscriber, true)
+    set_daily_report_preference(subscriber, false, project:)
 
     described_class.new.call(entry:, actor:, event: "created")
 
@@ -89,7 +93,7 @@ RSpec.describe DailyReport::NotifyWatchersService, type: :model do
 
   it "does not notify a globally subscribed user who cannot view the Work Package" do
     subscriber = create(:user)
-    create(:notification_setting, user: subscriber, daily_report: true)
+    set_daily_report_preference(subscriber, true)
 
     described_class.new.call(entry:, actor:, event: "created")
 
