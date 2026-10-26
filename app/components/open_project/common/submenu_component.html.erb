@@ -110,6 +110,26 @@
         </ul>
       </div>
     <% end %>
+
+    <% if custom_filter_groups.any? %>
+      <%= form_with url: notifications_path,
+                    method: :get,
+                    data: { turbo_frame: "_top" } do %>
+        <% custom_filter_groups.each do |menu_item| %>
+          <%= render "notifications/menus/custom_filter_group",
+                     menu_item:,
+                     filter_name: custom_filter_name(menu_item),
+                     selected_values: selected_custom_filter_values(custom_filter_name(menu_item)),
+                     component: self %>
+        <% end %>
+
+        <div class="op-submenu--footer">
+          <%= render Primer::Beta::Button.new(type: :submit, scheme: :primary, size: :small) do %>
+            <%= I18n.t(:button_apply) %>
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
   </div>
 
   <% if @create_btn_options.present? %>

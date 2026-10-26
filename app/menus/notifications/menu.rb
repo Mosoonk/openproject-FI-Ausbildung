@@ -35,7 +35,8 @@ module Notifications
     include Rails.application.routes.url_helpers
 
     attr_reader :params, :current_user,
-                :query, :unread, :unread_by_reason, :unread_by_project
+                :query, :unread, :unread_by_reason, :unread_by_project,
+                :unread_by_actor_custom_field
 
     def initialize(params:, current_user:)
       @params = params
@@ -43,18 +44,25 @@ module Notifications
       @unread = filter_unread
       @unread_by_reason = filter_unread_by_reason
       @unread_by_project = filter_unread_by_project
+      @unread_by_actor_custom_field = filter_unread_by_actor_custom_field
 
       super(view_type: nil, project: nil, params:)
     end
 
     def menu_items
-      [
+      menu_groups = [
         OpenProject::Menu::MenuGroup.new(header: nil, children: [inbox_menu]),
         OpenProject::Menu::MenuGroup.new(header: I18n.t("notifications.menu.by_reason"),
                                          children: reason_filters),
         OpenProject::Menu::MenuGroup.new(header: I18n.t("notifications.menu.by_project"),
                                          children: project_filters)
       ]
+
+      menu_groups.concat(custom_field_menu_groups)
+    end
+
+    def custom_field_menu_groups
+      @custom_field_menu_groups ||= actor_custom_field_filters
     end
 
     private
@@ -105,8 +113,78 @@ module Notifications
       query.group_values
     end
 
+    def filter_unread_by_actor_custom_field
+      custom_fields = UserCustomField.visible(current_user).order(:name).to_a
+      return {} if custom_fields.empty?
+
+      group_custom_field_counts(custom_fields, unread_custom_field_value_counts(custom_fields))
+    end
+
+    def unread_custom_field_value_counts(custom_fields)
+      unread_notifications
+        .joins(actor_custom_field_join)
+        .where(CustomValue.table_name => { custom_field_id: custom_fields.map(&:id) })
+        .where.not(CustomValue.table_name => { value: [nil, ""] })
+        .group("#{CustomValue.table_name}.custom_field_id", "#{CustomValue.table_name}.value")
+        .count
+    end
+
+    def unread_notifications
+      Notification.visible(current_user).recipient(current_user).where(read_ian: false)
+    end
+
+    def actor_custom_field_join
+      <<~SQL.squish
+        INNER JOIN #{CustomValue.table_name}
+          ON #{CustomValue.table_name}.customized_type = 'Principal'
+          AND #{CustomValue.table_name}.customized_id = #{Notification.table_name}.actor_id
+      SQL
+    end
+
+    def group_custom_field_counts(custom_fields, counts)
+      fields_by_id = custom_fields.index_by(&:id)
+      counts.each_with_object(Hash.new { |hash, key| hash[key] = {} }) do |((field_id, value), count), result|
+        custom_field = fields_by_id[field_id]
+        result[custom_field][value] = count if custom_field
+      end
+    end
+
+    def actor_custom_field_filters
+      unread_by_actor_custom_field.map do |custom_field, values|
+        children = values
+                     .sort_by { |value, _| formatted_custom_field_value(custom_field, value).downcase }
+                     .map do |value, count|
+          filter = Queries::Notifications::Filters::ActorCustomFieldFilter.filter_name(custom_field)
+          menu_item(title: formatted_custom_field_value(custom_field, value),
+                    count:,
+                    query_params: query_params(filter, value),
+                    selected: actor_custom_field_value_selected?(custom_field, value))
+        end
+
+        OpenProject::Menu::MenuGroup.new(
+          header: custom_field.name,
+          children:
+        )
+      end
+    end
+
+    def formatted_custom_field_value(custom_field, value)
+      CustomValue.new(custom_field:, value:).formatted_value
+    end
+
     def query_params(filter, name)
       { filter:, name: }
+    end
+
+    def actor_custom_field_value_selected?(custom_field, value)
+      filter = Queries::Notifications::Filters::ActorCustomFieldFilter.filter_name(custom_field)
+      selected_actor_custom_field_values(filter).include?(value.to_s)
+    end
+
+    def selected_actor_custom_field_values(filter)
+      return [] unless params[:filter] == filter
+
+      Array(params[:name]).compact_blank.map(&:to_s)
     end
 
     def selected?(query_params)

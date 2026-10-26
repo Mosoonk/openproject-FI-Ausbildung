@@ -16,6 +16,16 @@
           title: t("notifications.facets.all_title"),
           selected: @facet == "all"
         )
+        PAGE_SIZES.each do |size|
+          control.with_item(
+            tag: :a,
+            icon: :"list-ordered",
+            href: notifications_path(facet: @facet, **current_filters.merge(page_size: size)),
+            label: size.to_s,
+            title: t("notifications.page_size.title", count: size),
+            selected: page_size == size
+          )
+        end
       end
 
       subheader.with_action_button(

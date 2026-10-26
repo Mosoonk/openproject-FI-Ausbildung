@@ -33,6 +33,7 @@ module Queries::Notifications
     filter Filters::ReadIanFilter
     filter Filters::IdFilter
     filter Filters::ProjectFilter
+    filter Filters::ActorCustomFieldFilter
     filter Filters::ReasonFilter
     filter Filters::ResourceIdFilter
     filter Filters::ResourceTypeFilter

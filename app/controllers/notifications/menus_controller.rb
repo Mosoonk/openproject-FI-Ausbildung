@@ -37,6 +37,7 @@ module Notifications
       menu = Notifications::Menu.new(params:, current_user:)
 
       @sidebar_menu_items = menu.menu_items
+      @custom_filter_groups = menu.custom_field_menu_groups
 
       render layout: nil
     end

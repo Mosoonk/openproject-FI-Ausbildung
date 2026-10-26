@@ -210,6 +210,10 @@ export class IanCenterService extends UntilDestroyedMixin {
     });
   }
 
+  setPageSize(pageSize:number):void {
+    this.store.update(({ params }) => ({ params: { ...params, pageSize } }));
+  }
+
   setFilters(filters:INotificationPageQueryParameters):void {
     this.store.update({ filters });
     this.onReload.pipe(take(1)).subscribe((collection) => {

@@ -31,11 +31,12 @@
 module OpenProject
   module Common
     class SubmenuComponent < ApplicationComponent
-      def initialize(sidebar_menu_items: nil, searchable: false, create_btn_options: nil)
+      def initialize(sidebar_menu_items: nil, searchable: false, create_btn_options: nil, custom_filter_groups: [])
         super()
         @sidebar_menu_items = sidebar_menu_items
         @searchable = searchable
         @create_btn_options = create_btn_options
+        @custom_filter_groups = custom_filter_groups
       end
 
       def render?
@@ -50,6 +51,41 @@ module OpenProject
       def nested_sidebar_menu_items
         @sidebar_menu_items
           .filter { |menu_item| menu_item.header.present? && menu_item.children.any? }
+          .excluding(*@custom_filter_groups)
+      end
+
+      def custom_filter_groups
+        @custom_filter_groups
+      end
+
+      def custom_filter_name(menu_item)
+        menu_item_query_params(menu_item.children.first)["filter"]
+      end
+
+      def custom_filter_value(menu_item)
+        menu_item_query_params(menu_item)["name"]
+      end
+
+      def selected_custom_filter_values(filter_name)
+        custom_filter_values(filter_name) || legacy_custom_filter_values(filter_name)
+      end
+
+      private
+
+      def menu_item_query_params(menu_item)
+        URI.decode_www_form(URI.parse(menu_item.href).query.to_s).to_h
+      end
+
+      def custom_filter_values(filter_name)
+        return unless helpers.params[:filters].respond_to?(:to_unsafe_h)
+
+        Array(helpers.params[:filters].to_unsafe_h[filter_name]).compact_blank.map(&:to_s)
+      end
+
+      def legacy_custom_filter_values(filter_name)
+        return [] unless helpers.params[:filter] == filter_name
+
+        Array(helpers.params[:name]).compact_blank.map(&:to_s)
       end
     end
   end

@@ -1,0 +1,43 @@
+<div data-controller="menus--submenu">
+  <button class="op-submenu--title"
+          type="button"
+          data-action="click->menus--submenu#toggleContainer">
+    <%= menu_item.header %>
+    <span class="icon-small icon-arrow-up1"
+          aria-hidden="true"
+          data-menus--submenu-target="indicator">
+    </span>
+  </button>
+
+  <ul class="op-submenu--items"
+      data-menus--submenu-target="container">
+    <% menu_item.children.each do |child_item| %>
+      <% value = component.custom_filter_value(child_item) %>
+      <% selected = selected_values.include?(value) %>
+
+      <li class="op-submenu--item">
+        <div class="op-submenu--item-action <%= "selected" if selected %>">
+          <%= render(
+                Primer::Alpha::CheckBox.new(
+                  name: "filters[#{filter_name}][]",
+                  id: "notification-filter-#{filter_name}-#{value.parameterize}",
+                  value:,
+                  checked: selected,
+                  label: child_item.title
+                )
+              ) %>
+
+          <% if child_item.count %>
+            <%= render Primer::Beta::Counter.new(
+                  count: child_item.count,
+                  scheme: :secondary,
+                  hide_if_zero: true,
+                  round: true,
+                  test_selector: "op-submenu--item-count"
+                ) %>
+          <% end %>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+</div>

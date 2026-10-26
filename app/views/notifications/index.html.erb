@@ -5,7 +5,9 @@
   <%= render(Notifications::IndexSubHeaderComponent.new(
     facet: params[:facet],
     filter_name: params[:name],
-    filter_type: params[:filter]
+    filter_type: params[:filter],
+    page_size: params[:page_size],
+    custom_filters: params[:filters]
   )) %>
 <% end %>
 

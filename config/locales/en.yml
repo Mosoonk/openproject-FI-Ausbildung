@@ -4912,8 +4912,12 @@ en:
       all_title: "Show all"
       unread: "Unread"
       unread_title: "Show unread"
+    page_size:
+      label: "Number of notifications"
+      title: "Show %{count} notifications"
     menu:
       by_project: "Unread by project"
+      by_user_attribute: "Unread by user attribute"
       by_reason: "Reason"
       inbox: "Inbox"
     query:

@@ -60,7 +60,7 @@ class NotificationsController < ApplicationController
       flash[:error] = filtered_query.errors.full_messages.join(", ")
     end
 
-    redirect_back fallback_location: notifications_path
+    redirect_back_or_to(notifications_path)
   end
 
   def share_upsell
@@ -78,26 +78,71 @@ class NotificationsController < ApplicationController
   end
 
   def filtered_query
-    query = Queries::Notifications::NotificationQuery.new(user: current_user)
-    query.where(:read_ian, "=", "f")
+    @filtered_query ||= Queries::Notifications::NotificationQuery
+                         .new(user: current_user)
+                         .where(:read_ian, "=", "f")
+                         .tap { apply_filter(it) }
+  end
 
+  def apply_filter(query)
+    apply_legacy_filter(query)
+    custom_attribute_filters.each { |filter, values| query.where(filter, "=", values) }
+  end
+
+  def apply_legacy_filter(query)
     case params[:filter]
     when "project"
-      id = params[:name].to_i
-      query.where(:project_id, "=", [id])
+      query.where(:project_id, "=", [params[:name].to_i])
     when "reason"
       query.where(:reason, "=", [params[:name]])
+    when actor_custom_field_filter?
+      query.where(params[:filter], "=", actor_custom_field_values)
     end
+  end
 
-    @filtered_query = query
+  def actor_custom_field_values
+    Array(params[:name]).compact_blank
+  end
+
+  def custom_attribute_filters
+    raw_custom_attribute_filters.filter_map do |filter, values|
+      values = Array(values).compact_blank
+      [filter, values] if actor_custom_field_filter?(filter) && values.present?
+    end
   end
 
   def validate_query
-    return if params[:filter].blank?
+    return unless notification_filter_present?
+    return if valid_notification_filter? && filtered_query.valid?
 
-    if %w[project reason].exclude?(params[:filter]) || !filtered_query.valid?
-      flash[:error] = I18n.t("notifications.query.invalid_filter")
-      redirect_to notifications_path
+    flash[:error] = I18n.t("notifications.query.invalid_filter")
+    redirect_to notifications_path
+  end
+
+  def notification_filter_present?
+    params[:filter].present? || params[:filters].present?
+  end
+
+  def valid_notification_filter?
+    valid_legacy_filter? && valid_custom_attribute_filters?
+  end
+
+  def valid_legacy_filter?
+    params[:filter].blank? || params.expect(:filter).in?(%w[project reason]) || actor_custom_field_filter?
+  end
+
+  def valid_custom_attribute_filters?
+    raw_custom_attribute_filters.all? do |filter, values|
+      actor_custom_field_filter?(filter) && Array(values).compact_blank.present?
     end
+  end
+
+  def raw_custom_attribute_filters
+    params.permit(filters: {}).fetch(:filters, {}).to_h
+  end
+
+  def actor_custom_field_filter?(filter = params[:filter])
+    field_id = filter.to_s.match(/\Aactor_cf_(\d+)\z/)&.captures&.first
+    field_id.present? && UserCustomField.visible(current_user).exists?(id: field_id)
   end
 end

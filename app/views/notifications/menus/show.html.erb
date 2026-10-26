@@ -1,3 +1,8 @@
 <%= turbo_frame_tag "notifications_sidemenu" do %>
-  <%= render OpenProject::Common::SubmenuComponent.new(sidebar_menu_items: @sidebar_menu_items) %>
+  <%= render(
+        OpenProject::Common::SubmenuComponent.new(
+          sidebar_menu_items: @sidebar_menu_items,
+          custom_filter_groups: @custom_filter_groups
+        )
+      ) %>
 <% end %>

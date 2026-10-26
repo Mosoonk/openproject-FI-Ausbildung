@@ -32,18 +32,22 @@ module Notifications
   class IndexSubHeaderComponent < ApplicationComponent
     include ApplicationHelper
 
-    attr_reader :facet, :filter_type, :filter_name
+    PAGE_SIZES = [10, 50, 100].freeze
 
-    def initialize(project: nil, facet: nil, filter_type: nil, filter_name: nil)
+    attr_reader :facet, :filter_type, :filter_name, :page_size
+
+    def initialize(project: nil, facet: nil, filter_type: nil, filter_name: nil, page_size: nil, custom_filters: nil)
       super
       @project = project
       @facet = facet
       @filter_type = filter_type
       @filter_name = filter_name
+      @page_size = PAGE_SIZES.include?(page_size.to_i) ? page_size.to_i : 100
+      @custom_filters = custom_filters
     end
 
     def current_filters
-      @current_filters ||= { filter: @filter_type, name: @filter_name }.compact
+      @current_filters ||= { filter: @filter_type, name: @filter_name, filters: @custom_filters, page_size: }.compact
     end
 
     def unread_notifications?

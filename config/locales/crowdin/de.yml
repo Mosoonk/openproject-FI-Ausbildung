@@ -4790,8 +4790,12 @@ de:
       all_title: Alle anzeigen
       unread: Ungelesen
       unread_title: Ungelesene anzeigen
+    page_size:
+      label: Anzahl der Benachrichtigungen
+      title: "%{count} Benachrichtigungen anzeigen"
     menu:
       by_project: Ungelesen pro Projekt
+      by_user_attribute: Ungelesen nach Benutzerattribut
       by_reason: Grund
       inbox: Eingang
     query:

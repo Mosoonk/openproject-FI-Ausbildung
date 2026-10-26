@@ -66,6 +66,8 @@ export class InAppNotificationCenterComponent implements OnInit {
 
   maxSize = NOTIFICATIONS_MAX_SIZE;
 
+  readonly pageSizes = [10, 50, NOTIFICATIONS_MAX_SIZE];
+
   hasMoreThanPageSize$ = this.storeService.hasMoreThanPageSize$;
 
   hasNotifications$ = this.storeService.hasNotifications$;
@@ -169,11 +171,20 @@ export class InAppNotificationCenterComponent implements OnInit {
 
   ngOnInit():void {
     const facet = this.urlParams.get('facet') ?? 'unread';
+    const pageSize = this.notificationPageSize();
+
+    this.maxSize = pageSize;
+    this.storeService.setPageSize(pageSize);
     this.storeService.setFacet(facet as 'unread'|'all');
     this.storeService.setFilters({
       filter: this.urlParams.get('filter'),
       name: this.urlParams.get('name'),
     });
+  }
+
+  private notificationPageSize():number {
+    const pageSize = Number(this.urlParams.get('page_size'));
+    return this.pageSizes.includes(pageSize) ? pageSize : NOTIFICATIONS_MAX_SIZE;
   }
 
   noNotificationText(hasNotifications:boolean):string {
