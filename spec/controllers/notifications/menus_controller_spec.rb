@@ -29,5 +29,15 @@ RSpec.describe Notifications::MenusController do
       "Apply"
     )
     expect(response.body).not_to include('type="hidden" value="0"')
+    rendered = Capybara.string(response.body)
+
+    expect(rendered).to have_css(
+      "li.op-submenu--item[data-filter--filter-list-target='searchItem'] " \
+      "label.op-submenu--item-action[data-test-selector='op-submenu--item-action']"
+    )
+    expect(rendered).to have_css(
+      "label.op-submenu--item-action input.FormControl-checkbox + span.op-submenu--item-title",
+      text: "LJ_1"
+    )
   end
 end

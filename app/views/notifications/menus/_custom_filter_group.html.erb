@@ -15,18 +15,20 @@
       <% value = component.custom_filter_value(child_item) %>
       <% selected = selected_values.include?(value) %>
 
-      <li class="op-submenu--item">
-        <div class="op-submenu--item-action <%= "selected" if selected %>">
-          <%= render(
-                Primer::Alpha::CheckBox.new(
-                  name: "filters[#{filter_name}]",
-                  id: "notification-filter-#{filter_name}-#{value.parameterize}",
-                  value:,
-                  scheme: :array,
-                  checked: selected,
-                  label: child_item.title
-                )
+      <li class="op-submenu--item" data-filter--filter-list-target="searchItem">
+        <label class="op-submenu--item-action <%= "selected" if selected %>"
+               data-test-selector="op-submenu--item-action">
+          <%= check_box_tag(
+                "filters[#{filter_name}][]",
+                value,
+                selected,
+                id: "notification-filter-#{filter_name}-#{value.parameterize}",
+                class: "FormControl-checkbox"
               ) %>
+
+          <span class="op-submenu--item-title">
+            <%= child_item.title %>
+          </span>
 
           <% if child_item.count %>
             <%= render Primer::Beta::Counter.new(
@@ -37,7 +39,7 @@
                   test_selector: "op-submenu--item-count"
                 ) %>
           <% end %>
-        </div>
+        </label>
       </li>
     <% end %>
   </ul>
