@@ -45,6 +45,7 @@ import idFromLink from 'core-app/features/hal/helpers/id-from-link';
 import {
   ColorsService,
 } from 'core-app/shared/components/colors/colors.service';
+import { parseNotificationPageFilters } from 'core-app/features/in-app-notifications/center/state/notification-filters';
 
 @Component({
   templateUrl: './in-app-notification-center.component.html',
@@ -176,10 +177,7 @@ export class InAppNotificationCenterComponent implements OnInit {
     this.maxSize = pageSize;
     this.storeService.setPageSize(pageSize);
     this.storeService.setFacet(facet as 'unread'|'all');
-    this.storeService.setFilters({
-      filter: this.urlParams.get('filter'),
-      name: this.urlParams.get('name'),
-    });
+    this.storeService.setFilters(parseNotificationPageFilters(window.location.search));
   }
 
   private notificationPageSize():number {

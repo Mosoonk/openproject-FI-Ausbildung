@@ -58,19 +58,18 @@ import {
 import { UntilDestroyedMixin } from 'core-app/shared/helpers/angular/until-destroyed.mixin';
 import idFromLink from 'core-app/features/hal/helpers/id-from-link';
 import { DeviceService } from 'core-app/core/browser/device.service';
-import { ApiV3ListFilter, ApiV3ListParameters } from 'core-app/core/apiv3/paths/apiv3-list-resource.interface';
+import { ApiV3ListParameters } from 'core-app/core/apiv3/paths/apiv3-list-resource.interface';
 import { FrameElement } from '@hotwired/turbo';
 import { PathHelperService } from 'core-app/core/path-helper/path-helper.service';
 import { UrlParamsService } from 'core-app/core/navigation/url-params.service';
 import { IanBellService } from 'core-app/features/in-app-notifications/bell/state/ian-bell.service';
 import { WP_ID_URL_PATTERN } from 'core-app/shared/helpers/work-package-id-pattern';
+import {
+  buildNotificationApiFilters,
+  INotificationPageQueryParameters,
+} from 'core-app/features/in-app-notifications/center/state/notification-filters';
 
 const DETAILS_URL_PATTERN = new RegExp(`/details/(${WP_ID_URL_PATTERN})(?:/|$)`);
-
-export interface INotificationPageQueryParameters {
-  filter?:string|null;
-  name?:string|null;
-}
 
 @Injectable({ providedIn: 'root' })
 @EffectHandler
@@ -149,17 +148,9 @@ export class IanCenterService extends UntilDestroyedMixin {
 
   get params():ApiV3ListParameters {
     const state = this.store.getValue();
-    const hasFilters = state.filters.name && state.filters.filter;
     return {
       ...state.params,
-      filters: [
-        ...state.activeFacet === 'all' ? IAN_FACET_FILTERS.all : IAN_FACET_FILTERS.unread,
-        ...(
-          hasFilters
-            ? ([[state.filters.filter, '=', [state.filters.name]]] as ApiV3ListFilter[])
-            : []
-        ),
-      ],
+      filters: buildNotificationApiFilters(IAN_FACET_FILTERS[state.activeFacet], state.filters),
     };
   }
 
