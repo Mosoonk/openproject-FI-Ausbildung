@@ -28,5 +28,6 @@ RSpec.describe Notifications::MenusController do
       'value="LJ_1"',
       "Apply"
     )
+    expect(response.body).not_to include('type="hidden" value="0"')
   end
 end

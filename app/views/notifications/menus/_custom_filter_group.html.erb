@@ -19,9 +19,10 @@
         <div class="op-submenu--item-action <%= "selected" if selected %>">
           <%= render(
                 Primer::Alpha::CheckBox.new(
-                  name: "filters[#{filter_name}][]",
+                  name: "filters[#{filter_name}]",
                   id: "notification-filter-#{filter_name}-#{value.parameterize}",
                   value:,
+                  scheme: :array,
                   checked: selected,
                   label: child_item.title
                 )
