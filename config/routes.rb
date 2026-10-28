@@ -30,6 +30,7 @@
 
 Rails.application.routes.draw do
   root to: "homescreen#index", as: "home"
+  resource :training_dashboard_settings, only: %i[show update], controller: "homescreen/training_dashboard_settings"
   rails_relative_url_root = OpenProject::Configuration["rails_relative_url_root"] || ""
 
   # Route for error pages

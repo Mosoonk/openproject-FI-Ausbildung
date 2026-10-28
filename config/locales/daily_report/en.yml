@@ -27,3 +27,30 @@ en:
           attributes:
             entry_date:
               too_old: "must not be more than seven days in the past"
+  home_dashboard:
+    title: "Training overview"
+    scope: "Work packages of the selected task types in active projects you can view. Average progress uses tasks with a recorded percentage."
+    configure_types: "Configure task types"
+    task_types_help: "Selected types count as tasks in all dashboard blocks. This shared setting can be changed by Ausbilder and administrators. Initially Aufgabe and Project are selected; newly created types are not selected automatically. Clear all checkboxes to count no work packages as tasks."
+    invalid_types: "One or more selected types no longer exist. Please review the selection."
+    metrics:
+      tasks: "Tasks"
+      progress: "Average progress"
+      overdue: "Overdue"
+      due_soon: "Due within 7 days"
+    deadlines: "Deadlines and warnings"
+    no_deadlines: "No participants with overdue open tasks were found in this view."
+    days_overdue:
+      one: "1 day overdue"
+      other: "%{count} days overdue"
+    view_all_overdue:
+      one: "Open 1 overdue project or task"
+      other: "Open all %{count} overdue projects and tasks"
+    participants: "Participants without open tasks"
+    participants_scope: "Participants with a Lehrjahr value and no directly assigned open work packages of the selected task types in active projects you can view. Click a participant to view their work package history."
+    participant_field_missing: "The Lehrjahr user attribute is unavailable. Participants cannot be identified."
+    no_participants: "No participants without open tasks were found in this view."
+    participants_count:
+      one: "1 participant"
+      other: "%{count} participants"
+  setting_training_dashboard_task_type_ids: "Work Package Types considered as tasks"

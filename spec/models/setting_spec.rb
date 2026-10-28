@@ -692,6 +692,19 @@ RSpec.describe Setting do
       end
     end
 
+    context "with an array value" do
+      let(:format) { :array }
+      let(:default) { -> { %w[12 34] } }
+
+      it "preserves the array after persistence and cache reload" do
+        expect(described_class[setting_name]).to eq(%w[12 34])
+        described_class.clear_cache
+
+        expect(described_class[setting_name]).to eq(%w[12 34])
+        expect(described_class.find_by!(name: setting_name).value).to eq(%w[12 34])
+      end
+    end
+
     context "with a more complex hash value" do
       let(:format) { :hash }
       let(:default) do

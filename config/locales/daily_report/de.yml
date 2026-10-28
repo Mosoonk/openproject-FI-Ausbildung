@@ -27,3 +27,30 @@ de:
           attributes:
             entry_date:
               too_old: "darf höchstens sieben Tage zurückliegen"
+  home_dashboard:
+    title: "Ausbildungsübersicht"
+    scope: "Arbeitspakete der ausgewählten Aufgabentypen in aktiven Projekten, die Sie sehen dürfen. Der Durchschnitt berücksichtigt Aufgaben mit einer Fortschrittsangabe."
+    configure_types: "Aufgabentypen konfigurieren"
+    task_types_help: "Ausgewählte Typen zählen in allen Dashboard-Blöcken als Aufgaben. Diese gemeinsame Einstellung kann von Ausbildern und Administratoren geändert werden. Anfangs sind Aufgabe und Project ausgewählt; neue Typen werden nicht automatisch ausgewählt. Ohne Auswahl zählen keine Arbeitspakete als Aufgaben."
+    invalid_types: "Mindestens ein ausgewählter Typ existiert nicht mehr. Bitte prüfen Sie die Auswahl."
+    metrics:
+      tasks: "Aufgaben"
+      progress: "Durchschnittlicher Fortschritt"
+      overdue: "Überfällig"
+      due_soon: "Fällig innerhalb von 7 Tagen"
+    deadlines: "Termine und Warnungen"
+    no_deadlines: "In dieser Ansicht wurden keine Teilnehmer mit überfälligen offenen Aufgaben gefunden."
+    days_overdue:
+      one: "1 Tag überfällig"
+      other: "%{count} Tage überfällig"
+    view_all_overdue:
+      one: "1 überfälliges Projekt oder Aufgabe öffnen"
+      other: "Alle %{count} überfälligen Projekte und Aufgaben öffnen"
+    participants: "Teilnehmer ohne offene Aufgaben"
+    participants_scope: "Teilnehmer mit Lehrjahr und ohne direkt zugewiesene offene Arbeitspakete der ausgewählten Aufgabentypen in aktiven Projekten, die Sie sehen dürfen. Klicken Sie auf einen Teilnehmer, um seine Arbeitspakethistorie zu sehen."
+    participant_field_missing: "Das Benutzerattribut Lehrjahr ist nicht verfügbar. Teilnehmer können nicht ermittelt werden."
+    no_participants: "In dieser Ansicht wurden keine Teilnehmer ohne offene Aufgaben gefunden."
+    participants_count:
+      one: "1 Teilnehmer"
+      other: "%{count} Teilnehmer"
+  setting_training_dashboard_task_type_ids: "Arbeitspakettypen, die als Aufgaben zählen"
