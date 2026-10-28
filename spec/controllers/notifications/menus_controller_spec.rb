@@ -36,7 +36,7 @@ RSpec.describe Notifications::MenusController do
       "label.op-submenu--item-action[data-test-selector='op-submenu--item-action']"
     )
     expect(rendered).to have_css(
-      "label.op-submenu--item-action input.FormControl-checkbox + span.op-submenu--item-title",
+      "label.op-submenu--item-action input.FormControl-checkbox.mr-2 + span.op-submenu--item-title",
       text: "LJ_1"
     )
   end
