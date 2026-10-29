@@ -127,6 +127,19 @@ RSpec.describe "Daily Report entries", :skip_csrf, type: :rails_request do
       )
     end
 
+    it "returns entries through API token authentication for a closed work package" do
+      own_entry
+      work_package.update!(status: create(:closed_status))
+      admin = create(:admin)
+      api_token = create(:api_token, user: admin)
+
+      get work_package_daily_report_entries_path(work_package, format: :json),
+          headers: { "X-OpenProject-API-Key" => api_token.plain_value }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body.pluck("id")).to contain_exactly(own_entry.id)
+    end
+
     it "rejects an invalid API token" do
       allow(RequestStore).to receive(:[]).and_call_original
 

@@ -41,7 +41,8 @@ import {
   ElementRef,
   inject,
   Input,
-  OnInit,
+  OnChanges,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
@@ -80,7 +81,7 @@ interface DailyReportCorrection {
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
-export class DailyReportTabComponent implements OnInit {
+export class DailyReportTabComponent implements OnChanges {
   private readonly http = inject(HttpClient);
   private readonly pathHelper = inject(PathHelperService);
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
@@ -105,8 +106,8 @@ export class DailyReportTabComponent implements OnInit {
     new Date(new Date().setDate(new Date().getDate() - 7)),
   );
 
-  public ngOnInit():void {
-    this.loadEntries();
+  public ngOnChanges(changes:SimpleChanges):void {
+    if (changes.workPackage && this.workPackage) this.loadEntries();
   }
 
   public createEntry(entryDate:string, entryKind:string, statusType:string, yesterdayText:string, todayText:string, issueText:string, risksText:string):void {
