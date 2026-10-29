@@ -112,5 +112,12 @@ See COPYRIGHT and LICENSE files for more details.
     </fieldset>
   </section>
 
+  <section class="form--section" id="training-dashboard-settings">
+    <fieldset class="form--fieldset">
+      <legend class="form--fieldset-legend"><%= t("home_dashboard.title") %></legend>
+      <%= link_to t("home_dashboard.configure_types"), training_dashboard_settings_path %>
+    </fieldset>
+  </section>
+
   <%= styled_button_tag t(:button_save), class: "-primary -with-icon icon-checkmark" %>
 <% end %>

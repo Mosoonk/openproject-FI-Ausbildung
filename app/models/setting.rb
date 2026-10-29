@@ -242,7 +242,7 @@ class Setting < ApplicationRecord
       return setting.value if setting
 
       generated_value = definition.default
-      create!(name:, value: formatted_value_for(generated_value, definition))
+      create!(name:, value: generated_value)
 
       # Clear cache so the next setting call populates it with this value
       clear_cache

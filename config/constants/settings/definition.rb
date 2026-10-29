@@ -1451,6 +1451,12 @@ module Settings
         default: "field",
         allowed: %w[field status]
       },
+      training_dashboard_task_type_ids: {
+        description: "Work package type IDs considered as tasks in the training dashboard.",
+        format: :array,
+        default: -> { Type.where(name: %w[Aufgabe Project]).pluck(:id).map(&:to_s) },
+        persist_on_first_read: true
+      },
       work_package_multiple_versions: {
         description: "Enable multiple version assignments on work packages.",
         format: :boolean,

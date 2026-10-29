@@ -34,6 +34,10 @@ require "open_project/static/links"
 OpenProject::Static::Homescreen.manage :blocks do |blocks|
   blocks.push(
     {
+      name: "training_dashboard",
+      if: Proc.new { Homescreen::TrainingDashboardQuery.allowed?(User.current) }
+    },
+    {
       name: "welcome",
       if: Proc.new { Setting.welcome_on_homescreen? && Setting.welcome_text.present? }
     },

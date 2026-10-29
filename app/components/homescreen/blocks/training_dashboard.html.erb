@@ -1,0 +1,107 @@
+<%#-- copyright
+OpenProject is an open source project management software.
+Copyright (C) the OpenProject GmbH
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License version 3.
+
+OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+Copyright (C) 2006-2013 Jean-Philippe Lang
+Copyright (C) 2010-2013 the ChiliProject Team
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+See COPYRIGHT and LICENSE files for more details.
+
+++#%>
+<%= render Grids::WidgetBoxComponent.new(key: "training-overview", title: t("home_dashboard.title"), full_width: true) do |widget| %>
+  <% widget.with_body do %>
+    <%= render(Primer::Beta::Text.new(tag: :p, color: :muted)) { t("home_dashboard.scope") } %>
+    <%= render(Primer::BaseComponent.new(tag: :dl, display: :flex, flex_wrap: :wrap, m: 0)) do %>
+      <% dashboard.metrics.each do |key, value| %>
+        <%= render(Primer::BaseComponent.new(tag: :div, classes: "col-6 col-md-3", p: 2, test_selector: "training-metric-#{key}")) do %>
+          <dt class="color-fg-muted"><%= t("home_dashboard.metrics.#{key}") %></dt>
+          <dd class="f2 text-bold m-0"><%= metric_value(key, value) %></dd>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+  <% widget.with_footer do %>
+    <%= render(Primer::Beta::Link.new(href: training_dashboard_settings_path)) do %>
+      <%= t("home_dashboard.configure_types") %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<%= render Grids::WidgetBoxComponent.new(key: "training-deadlines", title: t("home_dashboard.deadlines")) do |widget| %>
+  <% if dashboard.deadlines.empty? %>
+    <% widget.with_body do %>
+      <%= render(Primer::Beta::Text.new(color: :muted)) { t("home_dashboard.no_deadlines") } %>
+    <% end %>
+  <% else %>
+    <% dashboard.deadlines.each do |participant| %>
+      <% widget.with_row do %>
+        <%= render(Primer::BaseComponent.new(tag: :div, display: :flex, flex_wrap: :wrap, justify_content: :space_between, align_items: :center)) do %>
+          <%= render(Primer::BaseComponent.new(tag: :div, mr: 2)) do %>
+            <%= render(Primer::Beta::Link.new(href: overdue_work_packages_path(participant), font_weight: :bold)) do %>
+              <%= participant.name %>
+            <% end %>
+          <% end %>
+          <%= render(Primer::BaseComponent.new(tag: :div, my: 1)) do %>
+            <%= render(Primer::Beta::Label.new(scheme: :danger)) { deadline_label(participant) } %>
+            <%= render(Primer::Beta::Text.new(tag: :div, color: :muted, font_size: :small)) { helpers.format_date(participant.earliest_due_date) } %>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+  <% if dashboard.overdue_items_count.positive? %>
+    <% widget.with_footer do %>
+      <%= render(Primer::BaseComponent.new(tag: :div, display: :flex, flex_wrap: :wrap, justify_content: :space_between, align_items: :center)) do %>
+        <%= render(Primer::Beta::Text.new(color: :muted, mr: 2)) do %>
+          <%= t("home_dashboard.participants_count", count: dashboard.deadlines.size) %>
+        <% end %>
+        <%= render(Primer::Beta::Link.new(href: overdue_work_packages_path, font_weight: :bold, test_selector: "training-dashboard-view-all-overdue")) do %>
+          <%= t("home_dashboard.view_all_overdue", count: dashboard.overdue_items_count) %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<%= render Grids::WidgetBoxComponent.new(key: "training-unassigned-participants", title: t("home_dashboard.participants")) do |widget| %>
+  <% widget.with_row do %>
+    <%= render(Primer::Beta::Text.new(tag: :p, color: :muted, mb: 0)) { t("home_dashboard.participants_scope") } %>
+  <% end %>
+  <% if !dashboard.participant_field_available? %>
+    <% widget.with_row do %>
+      <%= t("home_dashboard.participant_field_missing") %>
+    <% end %>
+  <% elsif dashboard.participants_without_tasks.empty? %>
+    <% widget.with_row do %>
+      <%= t("home_dashboard.no_participants") %>
+    <% end %>
+  <% else %>
+    <% dashboard.participants_without_tasks.each do |participant| %>
+      <% widget.with_row do %>
+        <%= render(Primer::Beta::Octicon.new(icon: :person, mr: 2)) %>
+        <%= render(Primer::Beta::Link.new(href: participant_work_packages_path(participant))) { participant.name } %>
+      <% end %>
+    <% end %>
+    <% widget.with_footer do %>
+      <%= t("home_dashboard.participants_count", count: dashboard.participants_without_tasks.size) %>
+    <% end %>
+  <% end %>
+<% end %>
