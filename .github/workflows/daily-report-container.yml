@@ -54,7 +54,7 @@ jobs:
             type=raw,value=${{ inputs.release_tag }},enable=${{ github.event_name == 'workflow_dispatch' && inputs.release_tag != '' }}
           labels: |
             org.opencontainers.image.title=OpenProject FI Ausbildung
-            org.opencontainers.image.description=OpenProject 17.9.1 core fork with native Daily Report
+            org.opencontainers.image.description=OpenProject 17.9.4 core fork with native Daily Report
 
       - name: Build and publish slim image
         uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
