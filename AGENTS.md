@@ -31,7 +31,7 @@ Never cut: validation at trust boundaries, error handling that prevents data los
 ## Project override
 
 This working copy implements Daily Report as a maintained native customization
-of exact OpenProject tag `v17.9.4`, not as a plugin or standalone service.
+of exact OpenProject tag `v17.9.6`, not as a plugin or standalone service.
 Use the existing Rails application, session, CSRF protection, PostgreSQL,
 models and authorization infrastructure. Keep feature data in dedicated
 `daily_report_*` tables; do not use journals, comments or custom fields for
