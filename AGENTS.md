@@ -31,7 +31,7 @@ Never cut: validation at trust boundaries, error handling that prevents data los
 ## Project override
 
 This working copy implements Daily Report as a maintained native customization
-of exact OpenProject tag `v17.9.6`, not as a plugin or standalone service.
+of exact OpenProject tag `v17.9.7`, not as a plugin or standalone service.
 Use the existing Rails application, session, CSRF protection, PostgreSQL,
 models and authorization infrastructure. Keep feature data in dedicated
 `daily_report_*` tables; do not use journals, comments or custom fields for
@@ -57,7 +57,7 @@ superseded version values below when they disagree with these requirements.
 **OpenProject** is a web-based, open-source project management software written in Ruby on Rails with PostgreSQL for data persistence.
 
 - **Size**: Large monorepo (~840MB, ~1M+ lines of code)
-- **Backend**: Ruby 4.0.9, Rails ~8.1.3
+- **Backend**: Ruby 4.0.9, Rails ~8.1.4
 - **Frontend**: Node.js 24.x (>= 24.22.1), npm 11.x, TypeScript
 - **Database**: PostgreSQL (required)
 - **Architecture**: Server-rendered HTML with Hotwire (Turbo + Stimulus). Legacy Angular components exist and are being migrated to custom elements. Uses GitHub's Primer Design System via ViewComponent.

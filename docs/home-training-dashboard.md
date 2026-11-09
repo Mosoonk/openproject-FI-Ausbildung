@@ -37,7 +37,7 @@ models under the current user's authorization.
   no per-work-package row and no eight-row cutoff.
 - Clicking a warning row opens the native work package table with the participant's
   internal assignee ID, selected type IDs, open status and finish date filters.
-  OpenProject 17.9.6 implements `more than days ago` with an inclusive upper bound:
+  OpenProject 17.9.7 implements `more than days ago` with an inclusive upper bound:
   `0` includes today. As agreed, the native overdue query uses `1` to exclude today
   and match the dashboard exactly, without changing OpenProject's date operators.
 - When overdue items exist, the widget footer links to the native global work
